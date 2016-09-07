@@ -93,7 +93,7 @@ u08 flagConnetedWithSvr=0;//By HeYC from 1 to 0
 u32 timerOfReConnectSvr=0;//
 u08 hartconnectflag=0;
 
-u08 staInitMsg;
+u08 statOfConnectToRmtSvr;
 u08 flagBgnConnectSvr=0;//By HeYC, let it equal 0 at begin;
 //by HeYC 0907	u08 ATCWSAPEnable=0;//By HeYC let it euqal 0 at begin
 AIRCON  air;

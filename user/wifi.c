@@ -29,6 +29,8 @@
 //Redfine the coding compare of alarm mesage triggered
 //#define VER_INFO				"GW_V19"
 //0907: big changes had been happened, in flash struct, variable renamed ,etc...
+//#define VER_INFO				"GW_V20"
+//0907: renamed some variables make it more readable, and removed many variables that not used to release program space
 #define VER_INFO				"GW_V20"
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
@@ -40,13 +42,13 @@ u32 MSMSendTimer;
 u32 wifiSendTimer;
 
 char    wifiCmdbuf[100]; //COM?o3???
-char    wifiReadDateStep;
-char    wifiReadDateCounter;
+//By HeYC 0907	char    wifiReadDateStep;
+//By HeYC 0907	char    wifiReadDateCounter;
 
-WORD PORT,PORT1,PORT2,PORT3,PORT4;
+//By HeYC 0907	WORD PORT,PORT1,PORT2,PORT3,PORT4;
 WORD  deviceCmd[10];//
 //char stareqstrings[sBUFFER_SIZE];//
-uchar tcpcharCmds[10];
+//By HeYC 0907	uchar tcpcharCmds[10];
 char sbuffer[sBUFFER_SIZE];
 //DWORD  devicelongCmd[10];//
 static char line[sBUFFER_SIZE];
@@ -471,7 +473,7 @@ u08 wifiReadResponse(void)
                         	//	write_flash_array(SW_SETorUNSETSTATE,1,(u08 *)SetOrUnsetState);//´æÈë³··À×´Ì¬
 
 			  //}
-			  secModChangedFlag=2;//let loop send out stat report
+			  secModChangedFlag=3;//let loop send out stat report
 			  //else{
 			  	//Test
 			  //	SetOrUnsetStateflag=SetOrUnsetStateflag;
@@ -756,7 +758,7 @@ u08 wifiReadResponse(void)
 			//		sbuffer[17] =SetOrUnsetStateflag;
                       //  		write_flash_array(SW_SETorUNSETSTATE,1,(u08 *)SetOrUnsetState);//´æÈë³··À×´Ì¬                        		
 			  //}	
-			  secModChangedFlag=2;//let loop send out stat report
+			  secModChangedFlag=3;//let loop send out stat report
 			  
 			  //End:By HeYC
                     /*Bgn:Commented by HeYC
@@ -895,7 +897,7 @@ void decodestring (char *str)
                     {
                         deviceCmd[1]=atoi(p);//
                         //devicelongCmd[1]=atol(p);
-                        tcpcharCmds[1]=p[0];
+                        //By HeYC 0907	tcpcharCmds[1]=p[0];
                     }
                     else
                     {

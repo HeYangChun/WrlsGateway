@@ -39,25 +39,25 @@
 
 
 u32 SystemTimer;
-u32 wifiRetDelayTimer;
+//By HeYC 0907	u32 wifiRetDelayTimer;
 u32 wifiRestartTimer;
 u32 irDelayTimer;
 
 //byte ledTimer;
-word wKeyTime;
+//By HeYC 0907	word wKeyTime;
 char lastkey;
 char key;
-int wifiCounter=0;
+//By HeYC 0907	int wifiCounter=0;
 //By HeYC 0907	uchar wifiReset=0;
 uchar wifi_monitor_step=0;
-u16 lenths;
+//By HeYC 0907	u16 lenths;
 
 u08 KEYPRESS_Counter;
 u08 KEYPRESS_DelayFlg;
 u08 KEYPRESS_Long;
 
-u08 rets;
-u08  TEMP_cmd[2];	//
+//By HeYC 0907	u08 rets;
+//By HeYC 0907	u08  TEMP_cmd[2];	//
 u08 Alarmflag=0;
 volatile byte secModChangedFlag=0;//He from u08 to volatile byte
 u08 LED_staflag=0;
@@ -73,7 +73,7 @@ Output: 		no
 Return: 		no
 Others: 		no
 ********************************************************************************/
-u08 staClntTaskResult=0;
+u08 connectRmtSvrResult=0;
 
 void ResponseToDevFind();
 
@@ -108,10 +108,10 @@ TASK IdelTask(void)
    		{
      			if(flagBgnConnectSvr)//20秒连接一次
      			{
-        			staClntTaskResult=STAClienttask();
-        			if (staClntTaskResult!= WIFI_NONE)//连接云服务器
+        			connectRmtSvrResult=ConnectToRmtSvrInSTAMode();
+        			if (connectRmtSvrResult!= WIFI_NONE)//连接云服务器
         			{
-          				if( staClntTaskResult!=WIFI_OK)//HeYC:from 5 to 2
+          				if( connectRmtSvrResult!=WIFI_OK)//HeYC:from 5 to 2
             				{
 	            				if(++ClientCounterA>=2)
 						{
@@ -184,9 +184,10 @@ TASK IdelTask(void)
             				}
           			}
 	   			sysTickfor100ms = 0;
+				
        			alarmRFTask();//100ms检查一次是否有报警数据
        
-       			if(secModChangedFlag==1)  ////安防状态广播
+       			if(secModChangedFlag==1 || secModChangedFlag==2)  ////安防状态广播
        			{
        				//HeYC: broadcast security state changed
          				for(i=0;i<10;i++)
@@ -204,7 +205,7 @@ TASK IdelTask(void)
          				lenth=20;//strlen(sbuffer);
          				SMSSEND(lenth,sbuffer,1);   //广播
 					//By HeYC         SetOrUnsetflag=0;
-	 				secModChangedFlag=0;//By HeYC
+	 				secModChangedFlag--;//By HeYC
        			}
 	   			if((KEYPRESS_DelayFlg)&&(KEYPRESS_Long==0))//长按键处理
            			{
@@ -252,7 +253,7 @@ TASK IdelTask(void)
           					Alarmflag=0;
         				}
         
-        				if(secModChangedFlag==2)//安防状态改变上报服务器
+        				if(secModChangedFlag==3)//安防状态改变上报服务器
         				{
         					//HeYC: send stat to server
           					for(i=0;i<10;i++)
@@ -270,7 +271,7 @@ TASK IdelTask(void)
           					lenth=20;//strlen(sbuffer);
           					SMSSEND(lenth,sbuffer,4);  //发送给服务器
 						//By HeYC          SetOrUnsetflag=2;
-						secModChangedFlag=1;//By HeYC
+						secModChangedFlag--;//By HeYC
 
 						//ByHeYC 0822		if(SetOrUnsetState[0]!=curSecuModeShadow){
 						//ByHeYC 0822			SetOrUnsetState[0]=curSecuModeShadow;
@@ -286,7 +287,7 @@ TASK IdelTask(void)
                
                  			//By HeYC0820	if(Authenticationflag)//8S   心跳
                  			//By HeYC 0820	{
-                   			if(++sysTickfor8s>=30)
+                   			if(++sysTickfor8s>=30)// 30*500ms=15S (in fact , 19.x sec)
                    			{
                    				sysTickfor8s=0;
 						
@@ -340,7 +341,7 @@ TASK IdelTask(void)
 							//By HeYC                  HFlagWhereAuthSetZero=3;
                   					flagBgnConnectSvr=1;
                   					timerOfReConnectSvr=0;
-                  					staInitMsg=WIFI_STA_PRE;
+                  					statOfConnectToRmtSvr=CON_RMT_SVR_STAT_READY;
                   
                  				}
                 			}
@@ -446,9 +447,9 @@ TASKCFUNC(wifiMonitor)
 //By HeYC0907           if(wifiATCmdSetStat)
           {
            wifiATCmdSetStat=WIFI_AT_CMD_OVER;//HeYC: from 2 to WIFI_STATE_INIT_FINISH
-           strcpy(sbuffer,"?GTIME**");
-           strcat(sbuffer,"\r\n");	
-           lenths=strlen(sbuffer);
+           //By HeYC 0907	strcpy(sbuffer,"?GTIME**");
+           //By HeYC 0907	strcat(sbuffer,"\r\n");	
+           //By HeYC 0907	lenths=strlen(sbuffer);
           // SMSSEND(lenths,sbuffer,ClientID);//发送给手机
           // SMSSEND(lenths,sbuffer,4);//发送给服务器
           }
@@ -778,19 +779,19 @@ Output: 		字符
 Return: 		no
 Others: 		no
 ********************************************************************************/
-char  Char_convert_ASCII(char data)
-{
-    char ASdata;
-    if(data<=0x09)
-    {
-     ASdata=data+'0';
-    }
-    else
-    {
-     ASdata=data-10+'A';
-    }
-   return ASdata;
-}
+//By HeYC 0907	char  Char_convert_ASCII(char data)
+//By HeYC 0907	{
+//By HeYC 0907	    char ASdata;
+//By HeYC 0907	    if(data<=0x09)
+//By HeYC 0907	    {
+//By HeYC 0907	     ASdata=data+'0';
+//By HeYC 0907	    }
+//By HeYC 0907	    else
+//By HeYC 0907	    {
+//By HeYC 0907	     ASdata=data-10+'A';
+//By HeYC 0907	    }
+//By HeYC 0907	   return ASdata;
+//By HeYC 0907	}
 /*******************************************************************************
 Function: 	    ASCII_convert_Char(char data)
 Description: 	字符转数字
@@ -801,17 +802,17 @@ Output: 		数字
 Return: 		no
 Others: 		no
 ********************************************************************************/
-char  ASCII_convert_Char(char ASdata)
-{
-    char data;
-
-	if ((ASdata <= '9') && (ASdata >= '0'))
-		data=ASdata - '0';
-	else 
-		data=ASdata - 'A' + 10;
-
-   return data;
-}
+//By HeYC 0907	char  ASCII_convert_Char(char ASdata)
+//By HeYC 0907	{
+//By HeYC 0907	    char data;
+//By HeYC 0907	
+//By HeYC 0907		if ((ASdata <= '9') && (ASdata >= '0'))
+//By HeYC 0907			data=ASdata - '0';
+//By HeYC 0907		else 
+//By HeYC 0907			data=ASdata - 'A' + 10;
+//By HeYC 0907	
+//By HeYC 0907	   return data;
+//By HeYC 0907	}
 
 
 
@@ -1015,40 +1016,40 @@ Output: 		staClientConnent
 Return: 		no
 Others: 		no
 ********************************************************************************/
-u08 STAClienttask(void)
+u08 ConnectToRmtSvrInSTAMode(void)
 {
 	u08 wret=WIFI_NONE;
         u08 ret=WIFI_NONE;
         
-	switch (staInitMsg)
+	switch (statOfConnectToRmtSvr)
 	{
-		case WIFI_STA_PRE:
-			staInitMsg++;
+		case CON_RMT_SVR_STAT_READY:
+			statOfConnectToRmtSvr++;
 //By HeYC 0907	                        WifiBusy=WIFI_AT_BUSY;//模块开始发送数据，期间不可打断
 			break;
-		case WIFI_STA_INIT_CIFSR:
+		case CON_RMT_SVR_STAT_INIT_CIFSR:
 			if (wifiCmdCIFSR(1) != WIFI_NONE)   //
 			{
                          if(STAEnable)//已连接路由器
                           {
                            
-                           staInitMsg++;
+                           statOfConnectToRmtSvr++;
                            sTimeout(&wifiSendTimer, 0);
                           }
                           else
                           {
-                           staInitMsg = WIFI_STA_ERROR;
+                           statOfConnectToRmtSvr = CON_RMT_SVR_STAT_ERROR;
                           }
                         }
 			break;
-                case WIFI_STA_CONNET_CIPSERVER:
+                case CON_RMT_SVR_STAT_CIPSERVER:
                      if (sTimeout(&wifiSendTimer, 200))  //5s等待重启完成
                      {
                        wret=wifiCmdCIPSTART(gCfgPara.serverAddr,gCfgPara.serverPort,1);
                        
                        if (wret != WIFI_NONE)//
 			            {
-                           staInitMsg = WIFI_STA_PRE;
+                           statOfConnectToRmtSvr = CON_RMT_SVR_STAT_READY;
 //By HeYC 0907	                           WifiBusy=WIFI_IDEL;
                            ret=WIFI_OK;
                            if(wret==WIFI_OK)
@@ -1064,14 +1065,14 @@ u08 STAClienttask(void)
                         }
                      }
                        break;
-		case WIFI_STA_ERROR:
+		case CON_RMT_SVR_STAT_ERROR:
 //By HeYC 0907				WifiBusy=WIFI_IDEL;
-			staInitMsg = WIFI_STA_PRE;
+			statOfConnectToRmtSvr = CON_RMT_SVR_STAT_READY;
                         ret=WIFI_ERR;
 			break;
 		default:
 //By HeYC 0907				WifiBusy=WIFI_IDEL;
-			staInitMsg = WIFI_STA_PRE;
+			statOfConnectToRmtSvr = CON_RMT_SVR_STAT_READY;
                         ret=WIFI_ERR;
 			break;
 	}
@@ -1080,18 +1081,18 @@ u08 STAClienttask(void)
 }
 
 
-void get_flag(int module) 
-{
-    char s[5];
-    int low = 0, high = 0;
-    sprintf(s, "%04x", module);
-
-    low = strtol(&s[2], NULL, 16);
-    s[2] = '\0';
-    high = strtol(&s[0], NULL, 16);
-
-    printf("%02x, %02x\n", high, low);
-}
+//By HeYC 0907	void get_flag(int module) 
+//By HeYC 0907	{
+//By HeYC 0907	    char s[5];
+//By HeYC 0907	    int low = 0, high = 0;
+//By HeYC 0907	    sprintf(s, "%04x", module);
+//By HeYC 0907	
+//By HeYC 0907	    low = strtol(&s[2], NULL, 16);
+//By HeYC 0907	    s[2] = '\0';
+//By HeYC 0907	    high = strtol(&s[0], NULL, 16);
+//By HeYC 0907	
+//By HeYC 0907	    printf("%02x, %02x\n", high, low);
+//By HeYC 0907	}
 
 
 /*******************************************************************************
@@ -1357,7 +1358,8 @@ u08 AirControlCmd(u08 cmd,u08 state)
   
   if(air.cmdsetp)//等待命令返回
   {
-        if((sTimeout(&wifiRetDelayTimer, 100))||(air.ack!=IR_NONE))//1s
+        //By HeeYC 0907	if((sTimeout(&wifiRetDelayTimer, 100))||(air.ack!=IR_NONE))//1s
+        if(air.ack!=IR_NONE)// By HeYC 0907
           {
             if(air.ack==IR_OK)
             {
@@ -1905,7 +1907,7 @@ void  alarmRFTask(void)//100ms任务
 	    	{
 			alarm.NO=i;//探头编号
 	     		
-	     		secModChangedFlag=2;		//By HeYC let loop send out stat report
+	     		secModChangedFlag=3;		//By HeYC let loop send out stat report
 	     		curSecuModeShadow=2;	//By HeYC	     		
 	     		if(alarm.sending==0)		//同一次报警只发送一次, Fucking logic  HeYC
 	     		{

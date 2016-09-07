@@ -1495,40 +1495,42 @@ void TIM3_UPD_OVF_BRK_IRQHandler(void) interrupt 15
 __interrupt void TIM3_UPD_OVF_BRK_IRQHandler(void)//1ms
 #endif
 {
-  static u8 cnt_100ms = 0;
-  /* In order to detect unexpected events during development,
-     it is recommended to set a breakpoint on the following instruction.
-  */
-  tick_10ms++;
-  if(cnt_100ms < 10)
-  {cnt_100ms++;}
-  else
-  {
-    tick_100ms++;
-    cnt_100ms = 0;
-  }
- // if(wifiEnable==2)
- // {
-   // ADCProcess();//test
-  //  adStart=1;
- // }
-  sys1msFlag=1;
-  IR.rfRcvTimer++;//对RF学习结束判断计数器
-  alarm.Tout++;//RF报警报警超时计数器
-  if (++sysTickfor10ms >= 10)	// 10ms
-  {
-	sysTickfor10ms = 0;
-	sys10msFlag    = 1;
-	tickcount++;
+	static u8 cnt_100ms = 0;
+  	/* In order to detect unexpected events during development,
+     	it is recommended to set a breakpoint on the following instruction.
+  	*/
+	tick_10ms++;
+	if(cnt_100ms < 10)
+	{	
+		cnt_100ms++;	
+	}
+  	else
+  	{
+    		tick_100ms++;
+    		cnt_100ms = 0;
+  	}
+ 	// if(wifiEnable==2)
+ 	// {
+   	// ADCProcess();//test
+  	//  adStart=1;
+ 	// }
+  	sys1msFlag=1;
+  	IR.rfRcvTimer++;//对RF学习结束判断计数器
+  	alarm.Tout++;//RF报警报警超时计数器
+  	if (++sysTickfor10ms >= 10)	// 10ms
+  	{
+		sysTickfor10ms = 0;
+		sys10msFlag    = 1;
+		tickcount++;
         
-   // if (++Heartbeattimer5s >= 500)	// 5s
-   // {
-      //  Heartbeattimer5s=0;  
-   // }
+   		// if (++Heartbeattimer5s >= 500)	// 5s
+   		// {
+      		//  Heartbeattimer5s=0;  
+   		// }
         
 		
-  }
-  TIM3_ClearITPendingBit(TIM3_IT_UPDATE); //清中断
+  	}
+  	TIM3_ClearITPendingBit(TIM3_IT_UPDATE); //清中断
 }
 
 /**

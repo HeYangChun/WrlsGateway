@@ -35,13 +35,13 @@ TASK IdelTask(void);
 extern void GETCONFIG(void);//上电初始化，从flash取得配置信息
 TASKDFUNC(wifiMonitor);	                      //
 TASKDFUNC(wifiReset);
-char  Char_convert_ASCII(char data);
-char  ASCII_convert_Char(char ASdata);
+//By HeYC 0907	char  Char_convert_ASCII(char data);
+//By HeYC 0907	char  ASCII_convert_Char(char ASdata);
 void GetSWSTATES(void);
 //By HeYC 0822 setssidtask(void);
 //By HeYC 0822	u08 setstassidtask(void);
-u08 STAClienttask(void);
-void get_flag(int module);
+u08 ConnectToRmtSvrInSTAMode(void);
+//By HeYC 0907	void get_flag(int module);
 void AirControltask(void);
 u08 AirControlCmd(u08 cmd,u08 state);
 u08 XOR(unsigned char* puchMsg, unsigned short usDataLen);

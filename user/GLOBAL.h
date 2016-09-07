@@ -390,7 +390,7 @@ extern u08 wifiATCmdSetStat;//wifi使能
 extern u08 STAEnable;//sta模式连接路由器成功
 extern u08 flagConnetedWithSvr;//1表示远程连接成功
 extern u32 timerOfReConnectSvr;//
-extern u08 staInitMsg;
+extern u08 statOfConnectToRmtSvr;
 extern u08 flagBgnConnectSvr;
 //by HeYC 0907	extern u08 ATCWSAPEnable;
 extern AIRCON  air;
