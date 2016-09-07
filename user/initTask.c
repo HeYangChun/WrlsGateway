@@ -76,286 +76,287 @@ Others: 		no
 u08 staClntTaskResult=0;
 TASK IdelTask(void)
 {
-  u32 i;
+	u32 i;
    
-  GetSWSTATES();
+	GetSWSTATES();
 
  
  /***************************************************************************************************************************************************
 				 10ms任务
  ***************************************************************************************************************************************************/
  		 
-  if(sys1msFlag)	
-  {
-   sys1msFlag=0;
-   AirControltask();//红外芯片控制任务，串口3
-
-//He:WifiBusy never be se to WIFI_DATA_BUSY
-   //He:if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_DATA_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
-   if((WifiBusy==WIFI_IDEL)&&(wifiEnable==WIFI_STATE_INIT_FINISH))//By HeYC
-   {
-     Auto_WIFI_Send();//发送数据
-   }
-   
-   if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AT_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
-   {
-     if(staClientConnentStart)//20秒连接一次
-     {
-        staClntTaskResult=STAClienttask();
-        if (staClntTaskResult!= WIFI_NONE)//连接云服务器
-        {
-          if( staClntTaskResult!=WIFI_OK)//HeYC:from 5 to 2
-            {
-	            if(++ClientCounterA>=2){
-		              //By HeYC0820 Authenticationflag=0;//关闭心跳
-		              //By HeYC0820 HFlagWhereAuthSetZero=1;
-		              wifi_monitor_step=WIFI_RESTART_PRE;
-			      wifiEnable=WIFI_STATE_PRE;//By HeYC 0822
-		              ChangeTask(wifiResetTaskID); // 启动重启模块任务
-		              ClientCounterA=0;
-		              staClientConnent=1;//停止连接服务器
-	            	}
-            }  
-            
-            staClientConnentStart=0;
-        }
-      // if (wifiCmdCIPSTART(staClientIP,staClientPort,1)!= WIFI_NONE)//连接云服务器
-        //{
-        // staClientConnentStart=0;
-       //  staClientConnent=1;
-       // }
-     }
-   }
-   /*:Bgn:Commented by HeYC
-   if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AP_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
-   {
-    if(ATCWSAPEnable)
-    {
-      if(setssidtask()!= WIFI_NONE)
-      {
-       ATCWSAPEnable=0;
-      }
-    }
-   }
-   
-   if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_STA_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
-   {
-     if(setSSid)
-     {
-      if(setstassidtask()!= WIFI_NONE)
-      {
-       setSSid=0;
-       strcpy(UDPPort,"59999");
-       wifiMDInitflag=0;
-       hartconnectflag=0;
-       //wifi_monitor_step=WIFI_RESTART_PRE;
-      // ChangeTask(wifiResetTaskID); // 启动重启模块任务
-       ChangeTask(wifiMonitorTaskID);//启动wifi初始化任务
-      }
-     }
-  }
-   //End:commented by HeYC*/
-  if((sys10msFlag)) // 10ms
-  {	 
-	sys10msFlag = 0;
-	ledCtrlProc();
-	commTask();
-    IRProcess();  
-//By HeYC 0906 move it into 500ms cycle    CheckTimeOutAfterAPPCfg();
-    IWDG_ReloadCounter();			// 踢看门狗
-    if (++sysTickfor100ms >= 10) // 100ms
+	if(sys1msFlag)	
 	{
-          if(LED_staflag)  
-          {
-            if(++LED_stpflag>=20)
-            {
-              LED_staflag=0;
-              LED_stpflag=0;
-              ledSetParam(50,100);//指示灯回复正常闪烁
-              
-            }
-          }
-	   sysTickfor100ms = 0;
-       alarmRFTask();//100ms检查一次是否有报警数据
-       
-       if(secModChangedFlag==1)  ////安防状态广播
-       {
-       //HeYC: broadcast security state changed
-         for(i=0;i<10;i++)
-         {
-           sbuffer[i]=GetKZCurSetOrUnSet_answer[i];
-         }
-         for(i=10;i<16;i++)
-         {
-            sbuffer[i]=macidHEX[i-10];
-         }
-         // strcat(&sbuffer[10],macidHEX);
-         sbuffer[16] = curSecuModeShadow;//By HeYC: from SetOrUnsetState[0] to curSecuModeShadow
-         strcat(&sbuffer[17],RCR_ETX);
-         //  strcat(&sbuffer[20],"\r\n");
-         lenth=20;//strlen(sbuffer);
-         SMSSEND(lenth,sbuffer,1);   //广播
-	//By HeYC         SetOrUnsetflag=0;
-	 secModChangedFlag=0;//By HeYC
-       }
-	   if((KEYPRESS_DelayFlg)&&(KEYPRESS_Long==0))//长按键处理
-           {
-            if(++KEYPRESS_Counter>=30)//长按3秒
-            {
-             KEYPRESS_Long=1;
-             KEYPRESS_Counter=0;
-            // KEYPRESS_DelayFlg=0;
+   		sys1msFlag=0;
+   		AirControltask();//红外芯片控制任务，串口3
+
+		//He:WifiBusy never be se to WIFI_DATA_BUSY
+   		//He:if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_DATA_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
+   		if((WifiBusy==WIFI_IDEL)&&(wifiEnable==WIFI_STATE_INIT_FINISH))//By HeYC
+   		{
+     			Auto_WIFI_Send();//发送数据
+   		}
+   
+   		if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AT_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
+   		{
+     			if(staClientConnentStart)//20秒连接一次
+     			{
+        			staClntTaskResult=STAClienttask();
+        			if (staClntTaskResult!= WIFI_NONE)//连接云服务器
+        			{
+          				if( staClntTaskResult!=WIFI_OK)//HeYC:from 5 to 2
+            				{
+	            				if(++ClientCounterA>=2)
+						{
+		              			//By HeYC0820 Authenticationflag=0;//关闭心跳
+		              			//By HeYC0820 HFlagWhereAuthSetZero=1;
+		              			wifi_monitor_step=WIFI_RESTART_PRE;
+			      				wifiEnable=WIFI_STATE_PRE;//By HeYC 0822
+		              			ChangeTask(wifiResetTaskID); // 启动重启模块任务
+		              			ClientCounterA=0;
+		              			staClientConnent=1;//停止连接服务器
+	            				}
+					}  
             
-             ledSetParam(10,20);//快速闪烁进入配置模式
-            }
-           }
-	  /// <!-- 500mS定时器
-	  if (++sysTickfor500ms > 5)	//500mS
-     // if (++sysTickfor500ms > 30)	//3S 测试用
-	  {
-	   	sysTickfor500ms=0;
-
-
-		CheckTimeOutAfterAPPCfg();//By HeYC
-        
-        if(Alarmflag)
-        {
-          for(i=0;i<10;i++)     
-          {
-            sbuffer[i]=KZProbeAlarm[i];
-          }
-          for(i=10;i<16;i++)
-          {
-            sbuffer[i]=macidHEX[i-10];
-          }
-           //strcat(&sbuffer[10],macidHEX);
-          sbuffer[16] = alarm.NO>>8;//keyValH 
-          sbuffer[17] = alarm.NO&0xff;//keyValL 
-          strcat(&sbuffer[18],RCR_ETX);
-          // strcat(&sbuffer[16],"\r\n");
-          lenth=21;//strlen(sbuffer);
-          SMSSEND(lenth,sbuffer,1);    //广播报警信息
-          Alarmflag=0;
-        }
-        
-        if(secModChangedFlag==2)//安防状态改变上报服务器
-        {
-        //HeYC: send stat to server
-          for(i=0;i<10;i++)
-          {
-             sbuffer[i]=GetCurSetOrUnSet_answer[i];
-          }
-          for(i=10;i<16;i++)
-          {
-            sbuffer[i]=macidHEX[i-10];
-          }
-          //strcat(&sbuffer[10],macidHEX);
-          sbuffer[16] = curSecuModeShadow;//By HeYC: from SetOrUnsetState[0] to curSecuModeShadow
-          strcat(&sbuffer[17],RCR_ETX);
-          // strcat(&sbuffer[20],"\r\n");
-          lenth=20;//strlen(sbuffer);
-          SMSSEND(lenth,sbuffer,4);  //发送给服务器
-//By HeYC          SetOrUnsetflag=2;
-		secModChangedFlag=1;//By HeYC
-
-//ByHeYC 0822		if(SetOrUnsetState[0]!=curSecuModeShadow){
-//ByHeYC 0822			SetOrUnsetState[0]=curSecuModeShadow;
-//ByHeYC 0822			write_flash_array(SW_SETorUNSETSTATE,1,(u08 *)SetOrUnsetState);
-//ByHeYC 0822		}
-        }
+            				staClientConnentStart=0;
+        			}
+      				// if (wifiCmdCIPSTART(staClientIP,staClientPort,1)!= WIFI_NONE)//连接云服务器
+        			//{
+        			// staClientConnentStart=0;
+       			//  staClientConnent=1;
+       			// }
+     			}
+   		}
+  		 /*:Bgn:Commented by HeYC
+   		if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AP_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
+   		{
+    			if(ATCWSAPEnable)
+    			{
+      				if(setssidtask()!= WIFI_NONE)
+      				{
+       				ATCWSAPEnable=0;
+      				}
+    			}
+   		}
+   
+   		if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_STA_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
+   		{
+     			if(setSSid)
+     			{
+      				if(setstassidtask()!= WIFI_NONE)
+      				{
+       				setSSid=0;
+       				strcpy(UDPPort,"59999");
+       				wifiMDInitflag=0;
+       				hartconnectflag=0;
+       				//wifi_monitor_step=WIFI_RESTART_PRE;
+      					// ChangeTask(wifiResetTaskID); // 启动重启模块任务
+       				ChangeTask(wifiMonitorTaskID);//启动wifi初始化任务
+      				}
+     			}
+  		}
+   		//End:commented by HeYC*/
+  		if((sys10msFlag)) // 10ms
+  		{	 
+			sys10msFlag = 0;
+			ledCtrlProc();
+			commTask();
+    			IRProcess();  
+			//By HeYC 0906 move it into 500ms cycle    CheckTimeOutAfterAPPCfg();
+    			IWDG_ReloadCounter();			// 踢看门狗
+    			if (++sysTickfor100ms >= 10) // 100ms
+			{
+          			if(LED_staflag)  
+          			{
+            				if(++LED_stpflag>=20)
+            				{
+              				LED_staflag=0;
+              				LED_stpflag=0;
+              				ledSetParam(50,100);//指示灯回复正常闪烁
+              
+            				}
+          			}
+	   			sysTickfor100ms = 0;
+       			alarmRFTask();//100ms检查一次是否有报警数据
        
-        if (uartwifiTimer > 0)
-		{
-		  uartwifiTimer--;
-		}
+       			if(secModChangedFlag==1)  ////安防状态广播
+       			{
+       				//HeYC: broadcast security state changed
+         				for(i=0;i<10;i++)
+         				{
+           					sbuffer[i]=GetKZCurSetOrUnSet_answer[i];
+         				}
+         				for(i=10;i<16;i++)
+         				{
+            					sbuffer[i]=macidHEX[i-10];
+         				}
+         				// strcat(&sbuffer[10],macidHEX);
+         				sbuffer[16] = curSecuModeShadow;//By HeYC: from SetOrUnsetState[0] to curSecuModeShadow
+         				strcat(&sbuffer[17],RCR_ETX);
+					//  strcat(&sbuffer[20],"\r\n");
+         				lenth=20;//strlen(sbuffer);
+         				SMSSEND(lenth,sbuffer,1);   //广播
+					//By HeYC         SetOrUnsetflag=0;
+	 				secModChangedFlag=0;//By HeYC
+       			}
+	   			if((KEYPRESS_DelayFlg)&&(KEYPRESS_Long==0))//长按键处理
+           			{
+            				if(++KEYPRESS_Counter>=30)//长按3秒
+            				{
+             					KEYPRESS_Long=1;
+             					KEYPRESS_Counter=0;
+            					// KEYPRESS_DelayFlg=0;
+            
+             					ledSetParam(10,20);//快速闪烁进入配置模式
+            				}
+           			}
+	  			/// <!-- 500mS定时器
+	  			if (++sysTickfor500ms > 5)	//500mS
+     				// if (++sysTickfor500ms > 30)	//3S 测试用
+	  			{
+	   				sysTickfor500ms=0;
+
+
+					CheckTimeOutAfterAPPCfg();//By HeYC
+        
+        				if(Alarmflag)
+        				{
+          					for(i=0;i<10;i++)     
+          					{
+            						sbuffer[i]=KZProbeAlarm[i];
+          					}
+          					for(i=10;i<16;i++)
+          					{
+            						sbuffer[i]=macidHEX[i-10];
+          					}
+           					//strcat(&sbuffer[10],macidHEX);
+          					sbuffer[16] = alarm.NO>>8;//keyValH 
+          					sbuffer[17] = alarm.NO&0xff;//keyValL 
+          					strcat(&sbuffer[18],RCR_ETX);
+          					// strcat(&sbuffer[16],"\r\n");
+          					lenth=21;//strlen(sbuffer);
+          					SMSSEND(lenth,sbuffer,1);    //广播报警信息
+          					Alarmflag=0;
+        				}
+        
+        				if(secModChangedFlag==2)//安防状态改变上报服务器
+        				{
+        					//HeYC: send stat to server
+          					for(i=0;i<10;i++)
+          					{
+             						sbuffer[i]=GetCurSetOrUnSet_answer[i];
+          					}
+          					for(i=10;i<16;i++)
+          					{
+            						sbuffer[i]=macidHEX[i-10];
+          					}
+          					//strcat(&sbuffer[10],macidHEX);
+          					sbuffer[16] = curSecuModeShadow;//By HeYC: from SetOrUnsetState[0] to curSecuModeShadow
+          					strcat(&sbuffer[17],RCR_ETX);
+          					// strcat(&sbuffer[20],"\r\n");
+          					lenth=20;//strlen(sbuffer);
+          					SMSSEND(lenth,sbuffer,4);  //发送给服务器
+						//By HeYC          SetOrUnsetflag=2;
+						secModChangedFlag=1;//By HeYC
+
+						//ByHeYC 0822		if(SetOrUnsetState[0]!=curSecuModeShadow){
+						//ByHeYC 0822			SetOrUnsetState[0]=curSecuModeShadow;
+						//ByHeYC 0822			write_flash_array(SW_SETorUNSETSTATE,1,(u08 *)SetOrUnsetState);
+						//ByHeYC 0822		}
+        				}
+       
+					if (uartwifiTimer > 0)
+					{
+		  				uartwifiTimer--;
+					}
              
                
-                 //By HeYC0820	if(Authenticationflag)//8S   心跳
-                 //By HeYC 0820	{
-                   if(++sysTickfor8s>=30)
-                   {
-                   		sysTickfor8s=0;
+                 			//By HeYC0820	if(Authenticationflag)//8S   心跳
+                 			//By HeYC 0820	{
+                   			if(++sysTickfor8s>=30)
+                   			{
+                   				sysTickfor8s=0;
 						
-                   	if(Authenticationflag)//HeYC:0820
-			{//By HeYC 0820
-	                     ClientCounterA=0;  //服务器从连次数标志
-	                     //sysTickfor8s=0;
-	                     for(int i=0;i<13;i++)
-	                     {
-	                        sbuffer[i]=Heartbeat[i];
-	                     }
-	                     lenth=13;//strlen(sbuffer);
-	                     SMSSEND(lenth,sbuffer,4);//发送给服务器
-			}//By HeYC 0820
+                   				if(Authenticationflag)//HeYC:0820
+						{//By HeYC 0820
+	                     			ClientCounterA=0;  //服务器从连次数标志
+	                     			//sysTickfor8s=0;
+	                     			for(int i=0;i<13;i++)
+	                     			{
+	                        				sbuffer[i]=Heartbeat[i];
+	                     			}
+	                     			lenth=13;//strlen(sbuffer);
+	                     			SMSSEND(lenth,sbuffer,4);//发送给服务器
+						}//By HeYC 0820
 
 
-			//He:check if no heart beat cnt exceed max
-                     if(++Heartbeattimer5s_count>=5)//By HeYC from 3 to 5
-                     { 
-                       Authenticationflag=0;//关闭心跳
-                       HFlagWhereAuthSetZero=2;
-                       Heartbeattimer5s_count=0;
-                        wifi_monitor_step=WIFI_RESTART_PRE;
-                       // ChangeTask(wifiResetTaskID); // 启动重启模块任务
-                       staClientConnent=0; //启动连接云服务器任务
+						//He:check if no heart beat cnt exceed max
+						if(++Heartbeattimer5s_count>=5)//By HeYC from 3 to 5
+                     			{ 
+                       				Authenticationflag=0;//关闭心跳
+                       				HFlagWhereAuthSetZero=2;
+                       				Heartbeattimer5s_count=0;
+                        				wifi_monitor_step=WIFI_RESTART_PRE;
+                       				// ChangeTask(wifiResetTaskID); // 启动重启模块任务
+                       				staClientConnent=0; //启动连接云服务器任务
                         
-                     }
-                   }
-                 //By HeYC0820}
+                     			}
+                   			}
+                 			//By HeYC0820}
                    
-                   //5s判断一次安防状态改变否
-		/*By HeYC
-                if(++sysTickfor6s>=20)//6S
-                 {
-                   sysTickfor6s=0;
-                   Read_Flash(SW_SETorUNSETSTATE,SetOrUnsetState,1); 
-                   if(curSecuModeShadow!=SetOrUnsetState[0])
-                   {
-                     SetOrUnsetflag=1;
-                   }
-                   curSecuModeShadow=SetOrUnsetState[0];
-                 }
-				//End:By HeYC */
+                   			//5s判断一次安防状态改变否
+					/*By HeYC
+                			if(++sysTickfor6s>=20)//6S
+                 			{
+                   				sysTickfor6s=0;
+                   				Read_Flash(SW_SETorUNSETSTATE,SetOrUnsetState,1); 
+                   				if(curSecuModeShadow!=SetOrUnsetState[0])
+                   				{
+                     				SetOrUnsetflag=1;
+                   				}
+                   				curSecuModeShadow=SetOrUnsetState[0];
+                 			}
+					//End:By HeYC */
 
-		//He:Check if connected with tcp server
-                if(staClientConnent==0)
-                {
-                 if((++staClientCounter>=15)&&(wifiEnable==WIFI_STATE_INIT_FINISH)&&(staClientConnentStart==0))//60秒连接一次(120)
-                 {
-//By HeYC                  Authenticationflag=0;//关闭心跳
-//By HeYC                  HFlagWhereAuthSetZero=3;
-                  staClientConnentStart=1;
-                  staClientCounter=0;
-                  staInitMsg=WIFI_STA_PRE;
+					//He:Check if connected with tcp server
+                			if(staClientConnent==0)
+                			{
+                 				if((++staClientCounter>=15)&&(wifiEnable==WIFI_STATE_INIT_FINISH)&&(staClientConnentStart==0))//60秒连接一次(120)
+                 				{
+							//By HeYC                  Authenticationflag=0;//关闭心跳
+							//By HeYC                  HFlagWhereAuthSetZero=3;
+                  					staClientConnentStart=1;
+                  					staClientCounter=0;
+                  					staInitMsg=WIFI_STA_PRE;
                   
-                 }
-                }
+                 				}
+                			}
                    
-                if(wifiReset)
-                {
-                 if(++wifiCounter>=2)//启动延时2秒后重新初始化WIFI模块
-                 {
-                  wifiReset=0;
-                  wifiEnable=WIFI_STATE_POWER_ON;//HeYC: from 1 to WIFI_STATE_POWER_ON 
-                  uartFlushReceiveBuffer(COM_WIFI);
-                  ledSetParam(10,30);
-                  ChangeTask(wifiMonitorTaskID);//启动收发任务
-                 }
-                }
-	  }
+                			if(wifiReset)
+                			{
+                 				if(++wifiCounter>=2)//启动延时2秒后重新初始化WIFI模块
+                 				{
+                  					wifiReset=0;
+                  					wifiEnable=WIFI_STATE_POWER_ON;//HeYC: from 1 to WIFI_STATE_POWER_ON 
+                  					uartFlushReceiveBuffer(COM_WIFI);
+                  					ledSetParam(10,30);
+                  					ChangeTask(wifiMonitorTaskID);//启动收发任务
+                 				}
+                			}
+	  			}
 			
 			
-        }
+        		}
 
 
-	//Bgn:By heYC 0822
-	if(curSecuMode!=curSecuModeShadow){
-		curSecuMode=curSecuModeShadow;
-		write_flash_array(SW_SETorUNSETSTATE,sizeof(curSecuMode),(u08 *)&curSecuMode);
-	}
-	//End:By HeYC 0822
-   }	
-  }
+			//Bgn:By heYC 0822
+			if(curSecuMode!=curSecuModeShadow){
+				curSecuMode=curSecuModeShadow;
+				write_flash_array(SW_SETorUNSETSTATE,sizeof(curSecuMode),(u08 *)&curSecuMode);
+			}
+			//End:By HeYC 0822
+   		}	
+ 	}
 }
 
 /*******************************************************************************
