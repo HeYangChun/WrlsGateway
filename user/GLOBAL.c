@@ -85,16 +85,16 @@ char apssidPassword[20]={"1234567"};//模块的密码
 u08 ClientID;   //例如用手机连模块，那么这个ID就指的是手机的ID,1号手机，2号手机。。。。
 //word AnalogData[REAL_ANALOG_NUM]; //取消
 //word delayoffCounter;//取消
-u08 wifiEnable=0;
+u08 wifiATCmdSetStat=0;//WIFI_STATE_PRE
 //u08  adStart;//取消
 u08 STAEnable;
-u08 staClientConnent=0;//By HeYC from 1 to 0
-u32 staClientCounter=0;//
+u08 flagConnetedWithSvr=0;//By HeYC from 1 to 0
+u32 timerOfReConnectSvr=0;//
 u08 hartconnectflag=0;
 
 u08 staInitMsg;
-u08 staClientConnentStart=0;//By HeYC, let it equal 0 at begin;
-u08 ATCWSAPEnable=0;//By HeYC let it euqal 0 at begin
+u08 flagBgnConnectSvr=0;//By HeYC, let it equal 0 at begin;
+//by HeYC 0907	u08 ATCWSAPEnable=0;//By HeYC let it euqal 0 at begin
 AIRCON  air;
 IR_  IR;				    //RF指令
 ALARM_RF  alarm;				    //RF报警指令

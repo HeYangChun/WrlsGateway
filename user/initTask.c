@@ -92,14 +92,14 @@ TASK IdelTask(void)
 
 		//He:WifiBusy never be se to WIFI_DATA_BUSY
    		//He:if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_DATA_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
-   		if((WifiBusy==WIFI_IDEL)&&(wifiEnable==WIFI_STATE_INIT_FINISH))//By HeYC
+   		if((WifiBusy==WIFI_IDEL)&&(wifiATCmdSetStat==WIFI_STATE_INIT_FINISH))//By HeYC
    		{
      			Auto_WIFI_Send();//发送数据
    		}
    
-   		if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AT_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
+   		if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AT_BUSY))&&(wifiATCmdSetStat==WIFI_STATE_INIT_FINISH))
    		{
-     			if(staClientConnentStart)//20秒连接一次
+     			if(flagBgnConnectSvr)//20秒连接一次
      			{
         			staClntTaskResult=STAClienttask();
         			if (staClntTaskResult!= WIFI_NONE)//连接云服务器
@@ -111,14 +111,14 @@ TASK IdelTask(void)
 		              			//By HeYC0820 Authenticationflag=0;//关闭心跳
 		              			//By HeYC0820 HFlagWhereAuthSetZero=1;
 		              			wifi_monitor_step=WIFI_RESTART_PRE;
-			      				wifiEnable=WIFI_STATE_PRE;//By HeYC 0822
+			      				wifiATCmdSetStat=WIFI_STATE_PRE;//By HeYC 0822
 		              			ChangeTask(wifiResetTaskID); // 启动重启模块任务
 		              			ClientCounterA=0;
-		              			staClientConnent=1;//停止连接服务器
+		              			flagConnetedWithSvr=1;//停止连接服务器
 	            				}
 					}  
             
-            				staClientConnentStart=0;
+            				flagBgnConnectSvr=0;
         			}
       				// if (wifiCmdCIPSTART(staClientIP,staClientPort,1)!= WIFI_NONE)//连接云服务器
         			//{
@@ -298,7 +298,7 @@ TASK IdelTask(void)
                        				Heartbeattimer5s_count=0;
                         				wifi_monitor_step=WIFI_RESTART_PRE;
                        				// ChangeTask(wifiResetTaskID); // 启动重启模块任务
-                       				staClientConnent=0; //启动连接云服务器任务
+                       				flagConnetedWithSvr=0; //启动连接云服务器任务
                         
                      			}
                    			}
@@ -319,14 +319,14 @@ TASK IdelTask(void)
 					//End:By HeYC */
 
 					//He:Check if connected with tcp server
-                			if(staClientConnent==0)
+                			if(flagConnetedWithSvr==0)
                 			{
-                 				if((++staClientCounter>=15)&&(wifiEnable==WIFI_STATE_INIT_FINISH)&&(staClientConnentStart==0))//60秒连接一次(120)
+                 				if((++timerOfReConnectSvr>=15)&&(wifiATCmdSetStat==WIFI_STATE_INIT_FINISH)&&(flagBgnConnectSvr==0))//60秒连接一次(120)
                  				{
 							//By HeYC                  Authenticationflag=0;//关闭心跳
 							//By HeYC                  HFlagWhereAuthSetZero=3;
-                  					staClientConnentStart=1;
-                  					staClientCounter=0;
+                  					flagBgnConnectSvr=1;
+                  					timerOfReConnectSvr=0;
                   					staInitMsg=WIFI_STA_PRE;
                   
                  				}
@@ -337,7 +337,7 @@ TASK IdelTask(void)
                  				if(++wifiCounter>=2)//启动延时2秒后重新初始化WIFI模块
                  				{
                   					wifiReset=0;
-                  					wifiEnable=WIFI_STATE_POWER_ON;//HeYC: from 1 to WIFI_STATE_POWER_ON 
+                  					wifiATCmdSetStat=WIFI_STATE_POWER_ON;//HeYC: from 1 to WIFI_STATE_POWER_ON 
                   					uartFlushReceiveBuffer(COM_WIFI);
                   					ledSetParam(10,30);
                   					ChangeTask(wifiMonitorTaskID);//启动收发任务
@@ -427,9 +427,9 @@ TASKCFUNC(wifiMonitor)
 	}
 	else
 	{
-          if(wifiEnable)
+          if(wifiATCmdSetStat)
           {
-           wifiEnable=WIFI_STATE_INIT_FINISH;//HeYC: from 2 to WIFI_STATE_INIT_FINISH
+           wifiATCmdSetStat=WIFI_STATE_INIT_FINISH;//HeYC: from 2 to WIFI_STATE_INIT_FINISH
            strcpy(sbuffer,"?GTIME**");
            strcat(sbuffer,"\r\n");	
            lenths=strlen(sbuffer);
@@ -443,11 +443,11 @@ TASKCFUNC(wifiMonitor)
 	   
           if(hartconnectflag)
           {
-           staClientConnent=1; //关闭连接云服务器任务   
+           flagConnetedWithSvr=1; //关闭连接云服务器任务   
           }
           else if(hartconnectflag==0)
           {
-            staClientConnent=0; //启动连接云服务器任务 
+            flagConnetedWithSvr=0; //启动连接云服务器任务 
           }
 	}
    } 
@@ -839,7 +839,7 @@ void GetSWSTATES(void)
           lastkey=key;
           Authenticationflag=0;//关闭心跳
           HFlagWhereAuthSetZero=4;
-          staClientConnent=1;
+          flagConnetedWithSvr=1;
           hartconnectflag=1;
           KEYPRESS_DelayFlg=0;
           wifiMDInitflag=1; //初始化模式标志
@@ -1030,13 +1030,13 @@ u08 STAClienttask(void)
                            ret=WIFI_OK;
                            if(wret==WIFI_OK)
                            {
-                            staClientConnent=1;
+                            flagConnetedWithSvr=1;
                            }
                            else
                            {
                               
-                             staClientConnent=0;
-                             staClientCounter=0;
+                             flagConnetedWithSvr=0;
+                             timerOfReConnectSvr=0;
                            }
                         }
                      }
@@ -1669,7 +1669,7 @@ void  CheckTimeOutAfterAPPCfg(void)
     if (sTimeout(&gAppCfgSuccTmout, 300)) //5s  He: from 500 to 300
    {
 //By HeYC 0822		     setSSid=1; //启动WIFI模块stassid设置
-     		staClientConnent=0; 
+     		flagConnetedWithSvr=0; 
      		ledSetParam(10,20);//快速闪烁进入wifi重启
 	     flagGotAppCfgInfo=0;
 

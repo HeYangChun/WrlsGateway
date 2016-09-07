@@ -385,14 +385,14 @@ extern u08 ClientID;
 //#define REAL_ANALOG_NUM		1	// 实际的模拟通道数量
 //extern word AnalogData[REAL_ANALOG_NUM]; //取消
 //extern word delayoffCounter;//取消
-extern u08 wifiEnable;//wifi使能
+extern u08 wifiATCmdSetStat;//wifi使能
 //extern u08  adStart;//取消
 extern u08 STAEnable;//sta模式连接路由器成功
-extern u08 staClientConnent;//1表示远程连接成功
-extern u32 staClientCounter;//
+extern u08 flagConnetedWithSvr;//1表示远程连接成功
+extern u32 timerOfReConnectSvr;//
 extern u08 staInitMsg;
-extern u08 staClientConnentStart;
-extern u08 ATCWSAPEnable;
+extern u08 flagBgnConnectSvr;
+//by HeYC 0907	extern u08 ATCWSAPEnable;
 extern AIRCON  air;
 extern u08 read_IR315_trig;        //
 extern u08 read_IR433_trig;

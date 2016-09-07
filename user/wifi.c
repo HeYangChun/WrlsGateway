@@ -302,7 +302,7 @@ u08 wifiReadResponse(void)
                       //!CWJAP**
                       //启动WIFI模块连接到路由器
 //By HeYC 0822	                      setSSid=1;
-                      staClientConnent=0;
+                      flagConnetedWithSvr=0;
                       strcpy(sbuffer,"!CWJAP**");
                       strcat(sbuffer,"\r\n");	
                       lenth=strlen(sbuffer);
@@ -312,7 +312,7 @@ u08 wifiReadResponse(void)
                     {  //?ATATCWSAP#<ssid>#<password>**
                       //!CWSAP**
 //By HeYC 0822	                      apsetSSid=WIFI_AP_SET;
-                      ATCWSAPEnable=1;
+//by HeYC 0907	                      ATCWSAPEnable=1;
                       strcpy(sbuffer,"!CWSAP**");
                       strcat(sbuffer,"\r\n");	
                       lenth=strlen(sbuffer);
@@ -361,7 +361,7 @@ u08 wifiReadResponse(void)
                       Authenticationflag=1;  //服务器身份验证通过标志位，开始心跳
                       HFlagWhereAuthSetZero=0;
                       Heartbeattimer5s_count=0;//By HeYc
-                      staClientConnent=1;//By HeYC
+                      flagConnetedWithSvr=1;//By HeYC
                       sysTickfor8s=0;
                     }
                  // else if(strncmp(profilecmds,BasicCommand,10)==0)// 服务器发送基础命令及其应答   (服务器)

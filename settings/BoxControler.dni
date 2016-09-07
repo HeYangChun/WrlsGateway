@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-214049926
+Checksum=524603336
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -35,11 +35,6 @@ ActionState=1
 [TraceHelper]
 Enabled=0
 ShowSource=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.588.3@1" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\user\main.c}.35.2@1" 1 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.112.17@1" 1 0 0 0 "" 0 ""
-Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -47,6 +42,11 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.589.3@1" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\user\main.c}.35.2@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.113.20@1" 1 0 0 0 "" 0 ""
+Count=3
 [Aliases]
 A0=_ "C:\Users\zzw\Desktop\BOXControler - V1.2.4\FWLib\src\stm8s_exti.c" ""
 A1=_ "D:\hhzn\BOXControler - V1.0\user\main.c" ""
