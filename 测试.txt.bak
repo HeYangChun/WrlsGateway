@@ -1,0 +1,14 @@
+?WSWITCH#0**
+
+
+记得回车换行符“/r/n”
+
+
+
+
+
+Send:?GETSWID**\r\n
+Rev:!SWID#1afe34a1584a**\r\n
+
+
+?ATCWSAP#yanfa#hhzn2012**

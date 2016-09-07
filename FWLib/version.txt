@@ -1,0 +1,327 @@
+/** @page Release_Notes Release notes for STM8S Firmware Library
+
+
+<h3>V1.1.1 - 06/05/2009</h3>
+
+@code
+ General
+ -------
+     + Project template updated for both STVD and RIDE toolchains
+     + Almost peripheral examples reviewed and validated with both Cosmic and Raisonance
+     compilers  
+
+ library
+ -------
+     + stm8s.h:
+        - __CONST  definition added for Cosmic and Raisonance compilers
+        - TINY definition added for Cosmic and Raisonance compilers
+        - NEAR definition added for Raisonance compilers
+        - CAN registers declaration updated
+        - ADC1 registers declaration updated
+               
+    + stm8s_adc1.h:
+         -  IS_ADC1_BUFFER_OK macro definition updated
+    
+    + stm8s_beep.c:
+         -  BEEP_Init function updated
+            - BEEP->CSR |= BEEP_CSR_BEEPEN; removed from init function
+    
+     + stm8s_can.c/.h:
+        - Private variables declaration changed to volatile
+        - CAN_DeInit function updated
+        - CAN_Receive function updated
+        - CAN_FilterInit funtion updated
+        - CAN_Transmit function updated
+        -  CAN_IT_TypeDef enum updated:
+             - CAN_IT_ERR and CAN_IT_LEC definition updated to avoid ANSI check 
+             error with Cosmic
+     
+     + stm8s_clk.h:
+         -  CLK_Peripheral_TypeDef enum updated:
+             - CLK_PERIPHERAL_UART1 definition updated and conditioned by the 
+             device to use
+        
+     
+     + stm8s_gpio.h:
+         -  The GPIO_Mode_TypeDef enum element definition updated:
+             - GPIO_MODE_OUT_OD_LOW_FAST
+             - GPIO_MODE_OUT_PP_LOW_FAST
+             - GPIO_MODE_OUT_OD_LOW_SLOW 
+             - GPIO_MODE_OUT_PP_LOW_SLOW
+             - GPIO_MODE_OUT_OD_HIZ_FAST
+             - GPIO_MODE_OUT_PP_HIGH_FAST
+             - GPIO_MODE_OUT_OD_HIZ_SLOW 
+             - GPIO_MODE_OUT_PP_HIGH_SLOW
+     
+     
+     + stm8s_tim3.h:
+        - IS_TIM3_CLEAR_FLAG_OK macro definition updated
+        - TIM3_GetITStatus and TIM3_GetFlagStatus functions updated:
+           - Local varaiables changed to volatile  
+
+     + stm8s_usart1.h:
+        -  UART1_IT_TypeDef enum description updated to give more details on the 
+        element values convention.
+        
+     + stm8s_usart2.h:
+        -  UART2_IT_TypeDef enum description updated to give more details on the 
+        element values convention. 
+
+     + stm8s_usart3.h:
+        -  UART3_IT_TypeDef enum description updated to give more details on the 
+        element values convention.
+        
+     + stm8s_gpio.c: 
+        - GPIO_ReadInputPin function updated
+     
+     + stm8s_i2c.c: 
+        - I2C_ClearFlag function description and code updated
+        - I2C_ClearITPendingBit function description and code updated
+     
+     + stm8s_itc.c: 
+        - The private function ITC_GetCPUCC definition updated for Raisonance
+     
+     + stm8s_tim1.c: 
+        - TIM1_GetITStatus and TIM1_GetFlagStatus functions updated:
+           - Local varaiables changed to volatile
+     
+     + stm8s_tim2.c: 
+        - TIM2_GetITStatus and TIM2_GetFlagStatus functions updated:
+           - Local varaiables changed to volatile   
+     
+     + stm8s_tim5.c: 
+        - TIM5_GetITStatus and TIM5_GetFlagStatus functions updated:
+           - Local varaiables changed to volatile  
+        
+     + stm8s_tim6.c: 
+        - TIM6_GetITStatus and TIM6_GetFlagStatus functions updated:
+           - Local varaiables changed to volatile   
+        
+     
+ examples
+ --------
+   + Almost examples were updated with both Cosmic and Raisonance compilers using 
+   STVD toolchain.
+     - Exception is made for the following FLASH examples:
+       - FLASH_EraseBlockOnFlashProgramMemory
+       - FLASH_WriteEraseBlockOnDataEepromMemory
+       - FLASH_BlockOperationOnFlashProgramMemory
+      --> Dependency related to linkerfile edition 
+      
+   + All examples readme.txt files were updated :
+      - @par Directory contents section updated
+      - @par Hardware and Software environment section updated
+      - @par How to use it ? section updated
+       
+   + Mono LCD driver updated: mono_lcd.c
+      - LCD_SendByte function updated by adding a delay (LCD_Delay(80);)
+      after sending the last byte 
+      
+   + Micro Sd driver updated : micro_sd.c
+      - MSD_WriteByte function updated to support 2G SD card (type: kingston) 
+   
+   + AWU example updated
+      - AWU_AutoLSICalibration private function removed and replaced by u32 LSIMeasurment
+      to measure LSI w/ either TIM1 or TIM3 depending on the used device
+    
+   + BEEP example updated
+      - BEEP_AutoLSICalibration private function removed and replaced by u32 LSIMeasurment
+      to measure LSI w/ either TIM1 or TIM3 depending on the used device
+      - Add BEEP_Cmd function call in the example due to BEEP_Init function update.
+    
+   + CLK example
+      - CLK_ClockSelection updated
+  
+   + SPI example
+      - SPI_FastCommunication example renamed to SPI_FastCommunicationMicroSD
+     
+ project
+ -------
+    + Project templates updated for STVD and RIDE toolchain
+      - asm_functions.asm file removed from both projects STVD with Raisonance and
+      RIDE7
+      - stm8s_it.c file updated to support both Cosmic and Raisonance compiler
+      - stm8_interrupt_vector.c and stm8s_it.h files were updated to use @far 
+      instead of @near
+      - Optimization option updated for STVD with Raisonance project 
+      - SCINAME(STM8) linker option added for STVD with Raisonance project
+      - STM8_OB.asm file added within RIDE7 project to configure option bytes
+      
+        
+@endcode
+
+<h3>V1.1.0 - 02/27/2009</h3>
+
+@code
+ General
+ -------
+     + The STM8S Firmware library supports now STM8S Performance line (STM8S208
+      and STM8S207 sub-families), Access line (STM8S105 and STM8S103 sub-families)
+      and STM8S903.
+      
+     + RN0022 "STM8S firmware library Release note" document merged in "stm8s_fwlib_um.chm"
+      user manual.
+
+     +  "stm8s_fwlib_um.chm" user manual: structure and content enhanced to provide 
+        complete information about the library and how it can be used.
+        
+     + List of peripheral examples reviewed: redundant examples were removed (same example 
+       provided for two or more peripherals) and others were added  
+
+ library
+ -------
+     + stm8_map.h renamed to stm8.hand the following modification were performed:
+        - add the library configuration section
+        - add definition of the used compiler 
+        - add definition of the library supported devices
+        - add definition of the standard peripheral driver use
+        - add definition of pointer declaration for FLASH routines
+        - Update peripheral registers and bit definition to support STM8S103 & 
+          STM8S903 devices: TIM5 & TIM6 registers and structures added
+        - OPT base address updated
+        - Peripheral declaration conditioned by supported devices
+        - add macros added for interrupts and bits handling (content of legacy
+          stm8s_macro.h file)
+        
+     + stm8s_macro.h file removed and its content is copied to stm8s.h file
+        
+     + stm8s_conf.h:
+        - Include stm8.h file instead of stm8s_type.h and stm8s_macro.h files
+        - #define DEBUG removed
+        - Cosmic section definition removed
+        - HSE value definition conditioned by supported devices
+        - CAN definition added
+        - TIM5 & TIM6 definition added
+        - Peripheral definition conditioned by supported devices
+        - add section for peripheral header file inclusion (content of legacy
+          stm8s_lib.h file) 
+
+     + stm8s_lib.h file removed and its content is copied to stm8s_conf.h file
+
+     + All peripheral drivers (tm8s_ppp.c) 
+        - '#include "stm8s_map.h"' replaced by '#include "stm8s.h"'
+        - Cosmic sections removed, except from stm8s_falsh.c   
+        
+     + stm8s_awu.h/.c:
+       - AWU_AutoLSICalibration function removed and added in AWU example
+
+     + stm8s_beep.h/.c:
+       - BEEP_AutoLSICalibration function removed and added in BEEP example 
+       
+    + stm8s_can.h/.c:
+       - CAN driver added
+
+    + stm8s_clk.h:
+       - CLK_Peripheral_TypeDef enum updated :
+          - CLK_PERIPHERAL_USART replaced by CLK_PERIPHERAL_UART1
+          - CLK_PERIPHERAL_LINUART replaced by CLK_PERIPHERAL_UART2
+          - CLK_PERIPHERAL_UART3, CLK_PERIPHERAL_TIMER6 and CLK_PERIPHERAL_TIMER5 added
+       - IS_CLK_PERIPHERAL_OK macro updated
+       
+     + stm8s_flash.h/.c: 
+       - FLASH_ProgramWord function updated to write data in big endian format
+       - Only FLASH_EraseBlock() &  FLASH_ProgramBlock() functions can be executed from RAM
+       - FLASH_EraseBlock()function is updated to support the lower memory size devices
+       - Add a check on the HVOFF flag in the FLASH_EraseBlock and 
+       FLASH_ProgramBlock functions before coming back to fetch from flash
+       - Parameter FLASH_STATUS_END_HIGH_VOLTAGE added in the 
+       FLASH_Status_TypeDef  enumeration
+    
+    +stm8s_i2c.h :
+      - IS_I2C_INPUT_CLOCK_FREQ_OK macro updated
+      
+     + stm8s_itc.h/c: 
+       - ITC_Irq_TypeDef updated: 
+        - the following parameters removed:
+          - ITC_IRQ_USART_TX
+          - ITC_IRQ_USART_RX
+          - ITC_IRQ_LINUART_TX
+          - ITC_IRQ_LINUART_RX
+          - ITC_IRQ_ADC
+         - the following parameters added : 
+          - ITC_IRQ_UART2_RX
+          - ITC_IRQ_UART2_TX
+          - ITC_IRQ_UART3_TX
+          - ITC_IRQ_UART3_RX
+          - ITC_IRQ_ADC2
+          - ITC_IRQ_ADC1
+          - ITC_IRQ_TIM6_OVFTRI
+          - ITC_IRQ_PORTF
+       - ITC_SetSoftwarePriority() function updated 
+
+ 
+ examples
+ --------
+   + All examples readme.txt files were updated :
+      - @par Directory contents section updated
+      - @par Hardware and Software environment section updated
+      - @par How to use it ? section updated 
+      
+   + Micro SD driver
+      - microsd.c file: MSD_WriteBlock function updated to support buffer size lower
+        than block size for the MicroSD memory card
+      
+   + ADC1 examples removed (equivalent examples are available for ADC2)
+   
+   + AWU example updated
+      - AWU_AutoLSICalibration private function added to calibrate LSI w/ TIM3
+    
+   + BEEP example updated
+      - BEEP_AutoLSICalibration private function added to calibrate LSI w/ TIM3
+    
+   + CAN example added
+    
+   + CLK examples
+      - ManualClcokSwitch example removed
+  
+   +  FLASH examples updated to support STM8S105, STM8S103 and STM8S903
+      - Rename and update the example " FLASH_WriteErase" by 
+      "FLASH_WriteEraseBlockOnDataEepromMemory"
+      - Rename and update the example " FLASH_EraseBlock" by 
+      "FLASH_EraseBlockOnFlashProgramMemory"
+      - FLASH_BlockOperationOnFlashProgramMemory example added to show the 
+      possibility to continue execution from RAM while program operation 
+      on FLASH Program is on going
+
+  + I2C_EEPROMRandomRead, I2C_EEPROMReadWrite and I2C_EEPROMSequentialRead examples
+    merged in on single example: I2C_EEPROM
+     - add driver for I2C EEPROM: i2c_ee.c/.h 
+
+   + TIM3 examples removed (equivalent examples are available for TIM1 and TIM2) 
+   
+   + TIM5 example added
+
+   + UART2 & UART3 examples removed (equivalent examples are available for UART1)
+     
+ project
+ -------
+    + Project templates updated for STVD and RIDE toolchain
+      - project.stw: one Workspace file including five projects related to the FW Lib 
+      STM8S supported devices
+        - stm8s103.stp  Project file for STM8S103 product 
+        - stm8s105.stp  Project file for STM8S105 product
+        - stm8s207.stp  Project file for STM8S207 product
+        - stm8s208.stp  Project file for STM8S208 product
+        - stm8s903.stp  Project file for STM8S903 product (not available on RIDE)
+@endcode
+
+
+<h3>V1.0.1 - 09/22/2008</h3>   
+
+@code
+  - I2C driver Update 
+    + stm8s_i2c.c: I2C_ClearFlag, I2C_GetITStatus and I2C_ClearITPendingBit functions updated
+    + stm8s_i2c.h: I2C_IT_TypeDef enumeration updated & new I2C_ITPendingBit_TypeDef enumeration added
+  - I2C IAP, SPI IAP, UART3 Lin & TIM3 OCActiveMode examples removed from the package 
+  - TIMx_GetCapturex functions updated on TIM1, TIM2 and TIM3
+  - CLK driver updated (CLK_AdjustHSICalibrationValue function optimized)
+  - Projects template updated 
+  - stm8s_map.h file updated (CAN registers structure added)
+  - User manual updated: new section added (Usage of STM8S Firmware Library Examples)
+@endcode
+
+
+<h3>V1.0.0 - 08/15/2008</h3>
+@code
+  Created.   
+@endcode  
