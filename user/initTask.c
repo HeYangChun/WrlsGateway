@@ -307,7 +307,7 @@ TASK IdelTask(void)
 						if(++Heartbeattimer5s_count>=5)//By HeYC from 3 to 5
                      			{ 
                        				Authenticationflag=0;//关闭心跳
-                       				HFlagWhereAuthSetZero=2;
+//By HeYC 0907	                       				HFlagWhereAuthSetZero=2;
                        				Heartbeattimer5s_count=0;
                         				wifi_monitor_step=WIFI_RESTART_PRE;
                        				// ChangeTask(wifiResetTaskID); // 启动重启模块任务
@@ -860,7 +860,7 @@ void GetSWSTATES(void)
         {
           lastkey=key;
           Authenticationflag=0;//关闭心跳
-          HFlagWhereAuthSetZero=4;
+//By HeYC 0907	          HFlagWhereAuthSetZero=4;
           flagConnetedWithSvr=1;
           hartconnectflag=1;
           KEYPRESS_DelayFlg=0;
@@ -1507,7 +1507,7 @@ void  IRProcess(void)
  	(IR.REVFLAG==RF_TYPE_315) ||
  	(IR.REVFLAG==RF_TYPE_INFRA)	)  //433M 315M 红外
  {
-	 if (sTimeout(&TimeOut, 1000)) // 10S超时退出
+	 if (sTimeout(&wrlsStudyTimeOut, 1000)) // 10S超时退出
 	  {
 	   IR.REVFLAG=RF_TYPE_NULL;//超过10秒为学习成功自动退出
 	   ledSetParam(50,100);//指示灯回复正常闪烁

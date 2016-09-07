@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-645503620
+Checksum=-132712378
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -35,9 +35,6 @@ ActionState=1
 [TraceHelper]
 Enabled=0
 ShowSource=1
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\user\main.c}.35.2@1" 1 0 0 0 "" 0 ""
-Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -45,6 +42,9 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\user\main.c}.35.2@1" 1 0 0 0 "" 0 ""
+Count=1
 [Aliases]
 A0=_ "C:\Users\zzw\Desktop\BOXControler - V1.2.4\FWLib\src\stm8s_exti.c" ""
 A1=_ "D:\hhzn\BOXControler - V1.0\user\main.c" ""

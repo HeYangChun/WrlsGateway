@@ -27,7 +27,9 @@
 //make it easy to read in IR releated interrupt PortD and PortE
 //#define VER_INFO				"GW_V18"
 //Redfine the coding compare of alarm mesage triggered
-#define VER_INFO				"GW_V19"
+//#define VER_INFO				"GW_V19"
+//0907: big changes had been happened, in flash struct, variable renamed ,etc...
+#define VER_INFO				"GW_V20"
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
 static int _wifiRet = WIFI_NONE;
@@ -330,7 +332,7 @@ u08 wifiReadResponse(void)
                   else if(strstr(line, "4,CLOSED"))//
                   {
                     Authenticationflag=0;
-					HFlagWhereAuthSetZero=5;
+//By HeYC 0907						HFlagWhereAuthSetZero=5;
                     wifiCmdCIPSTART(gCfgPara.serverAddr,gCfgPara.serverPort,1);
                   }
                   else if((line[10]==0x48)&&(line[11]==0x65)&&(line[12]==0x59)&&(line[17]==0x00)&&(line[18]==0x00)&&(line[19]==0x01))// 服务器身份验证要求及其应答   (服务器)
@@ -359,7 +361,7 @@ u08 wifiReadResponse(void)
                       Auto_WIFI_Send();//发送数据
                       
                       Authenticationflag=1;  //服务器身份验证通过标志位，开始心跳
-                      HFlagWhereAuthSetZero=0;
+//By HeYC 0907	                      HFlagWhereAuthSetZero=0;
                       Heartbeattimer5s_count=0;//By HeYc
                       flagConnetedWithSvr=1;//By HeYC
                       sysTickfor8s=0;
@@ -687,7 +689,7 @@ u08 wifiReadResponse(void)
                       if(line[21]==0x01)  //学习
                       {
                       	ledSetParam(10,20);//学习期间快速闪烁
-                        	sTimeout(&TimeOut, 0);
+                        	sTimeout(&wrlsStudyTimeOut, 0);
                         	if(line[20]==0x01)//红外
                         	{
                           		IR.REVFLAG=RF_TYPE_INFRA;
@@ -706,7 +708,7 @@ u08 wifiReadResponse(void)
                         	{
                           		IR_Decoding(2,rfs.number);
                         	}
-                        	sTimeout(&TimeOut, 0);  //10S学习时间，超时退出
+                        	sTimeout(&wrlsStudyTimeOut, 0);  //10S学习时间，超时退出
                       }                      
                       else if(line[21]==0x02)  //控制
                       {

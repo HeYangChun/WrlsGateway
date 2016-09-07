@@ -187,7 +187,7 @@ typedef struct APP
 
 
 //extern byte COMM1RecvBuf[COMM1_BUF_LEN];
-extern app_com app[5];//创建端口函数数组
+//By HeYC 0907	extern app_com app[5];//创建端口函数数组
 
 
 /************************ 位变量定义 ***********************/
@@ -320,20 +320,20 @@ extern volatile              DBit _BitParament0;
 
 
 extern volatile word   	    tickcount;      /* Timer tick count   		*/
-extern volatile byte 	    sysTickfor1ms;	/* 10millisecond timer 		*/
-extern volatile byte 	    sysTickfor1us;	/* 10millisecond timer 		*/
-extern volatile byte            Markfor1us;
+//By HeYC 0907	extern volatile byte 	    sysTickfor1ms;	/* 10millisecond timer 		*/
+//By HeYC 0907	extern volatile byte 	    sysTickfor1us;	/* 10millisecond timer 		*/
+//By HeYC 0907	extern volatile byte            Markfor1us;
 extern volatile word 		sysTickfor10ms;	/* 10millisecond timer 		*/
 extern volatile byte 		sysTickfor100ms;/* 100millisecond timer 	*/
 extern volatile byte 		sysTickfor500ms;   /* 500millisecond timer 	*/
-extern volatile byte 		sysTickforRtc1s;   /* 1second timer 	*/
+//By HeYC 0907	extern volatile byte 		sysTickforRtc1s;   /* 1second timer 	*/
 extern volatile byte 		  sysTickfor8s;   /* 8second timer 	*/
-extern volatile byte 		  sysTickfor5s;   /* 5second timer 	*/
-extern volatile byte 		  sysTickfor6s;   /* 6second timer 	*/
+//By HeYC 0907	extern volatile byte 		  sysTickfor5s;   /* 5second timer 	*/
+//By HeYC 0907	extern volatile byte 		  sysTickfor6s;   /* 6second timer 	*/
 extern volatile u16		uartwifiTimer;	//串口定时器，定时清空缓冲区
 extern volatile word         Heartbeattimer5s;
 extern volatile byte         Heartbeattimer5s_count;
-extern volatile byte         Heartbeattimer5sflag;
+//By HeYC 0907	extern volatile byte         Heartbeattimer5sflag;
 extern volatile byte           flagGotAppCfgInfo;
 
 #define WIFILENGTH  2
@@ -397,9 +397,9 @@ extern AIRCON  air;
 extern u08 read_IR315_trig;        //
 extern u08 read_IR433_trig;
 extern u8 send_flag;
-extern u32 TimeOut;
-extern u08 CodeBuf[IRCODELENGTH];
-extern u08 CodeHead,CodeTail;
+extern u32 wrlsStudyTimeOut;
+//By HeYC 0907	extern u08 CodeBuf[IRCODELENGTH];
+//By HeYC 0907	extern u08 CodeHead,CodeTail;
 extern u32 gAppCfgSuccTmout;
 //设防撤防状态
 //By HeYC 0906	extern u08 SetOrUnsetState[1];
@@ -413,7 +413,7 @@ extern u08 CNT;
 extern u08 wifiMDInitflag;
 extern u08 ClientCounterA;
 extern u08 hartconnectflag;
-extern byte HFlagWhereAuthSetZero;
+//By HeYC 0907	extern byte HFlagWhereAuthSetZero;
 extern volatile byte secModChangedFlag;//By HeYC
 extern int wifiInitMsg;//By HeYC 
 extern CfgParaInFlash   gCfgPara;//By HeYC 0906

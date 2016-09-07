@@ -11,32 +11,32 @@
 ********************************************************************************/
 #include "GLOBAL.h"
 
-char OFTS_AS_VERSION[4]={'V','1','.','0'};//版本号
+//By HeYC 0907	char OFTS_AS_VERSION[4]={'V','1','.','0'};//版本号
 //////////////////UART/////////////////////////
 //byte COMM1RecvBuf[COMM1_BUF_LEN];
-app_com app[5];//创建端口函数数组
+//By HeYC 0907	app_com app[5];//创建端口函数数组
 
 ///////////////////////////////////////////
 volatile                  DBit _BitParament0;
 volatile word   	  tickcount;      /* Timer tick count   		*/
-volatile byte 	          sysTickfor1ms;	/* 10millisecond timer 		*/
-volatile byte 	          sysTickfor1us=0;	/* 10millisecond timer 		*/
-volatile byte            Markfor1us=0;
+//By HeYC 0907	volatile byte 	          sysTickfor1ms;	/* 10millisecond timer 		*/
+//By HeYC 0907	volatile byte 	          sysTickfor1us=0;	/* 10millisecond timer 		*/
+//By HeYC 0907	volatile byte            Markfor1us=0;
 volatile word 	          sysTickfor10ms;	/* 10millisecond timer 		*/
 volatile byte 		  sysTickfor100ms;/* 100millisecond timer 	*/
 volatile byte 		  sysTickfor500ms;   /* 500millisecond timer 	*/
-volatile byte 		  sysTickforRtc1s;   /* 1second timer 	*/
+//By HeYC 0907	volatile byte 		  sysTickforRtc1s;   /* 1second timer 	*/
 volatile byte 		  sysTickfor8s;   /* 8second timer 	*/
-volatile byte 		  sysTickfor5s;   /* 5second timer 	*/
-volatile byte 		  sysTickfor6s;   /* 6second timer 	*/
+//By HeYC 0907	volatile byte 		  sysTickfor5s;   /* 5second timer 	*/
+//By HeYC 0907	volatile byte 		  sysTickfor6s;   /* 6second timer 	*/
 volatile word         Heartbeattimer5s=0;
 volatile byte         Heartbeattimer5s_count=0;
-volatile byte         Heartbeattimer5sflag=0;
+//By HeYC 0907	volatile byte         Heartbeattimer5sflag=0;
 volatile byte         flagGotAppCfgInfo=0;
 volatile byte         flagReplyDevFind=0;//BY HeYC 0907
 //By HeYC 0906	volatile byte    SetOrUnsetStateflag=0;//By HeYC
 volatile byte    curSecuModeShadow=0;//By HeYC 0906
-byte HFlagWhereAuthSetZero=0;//By HeYC
+//By HeYC 0907	byte HFlagWhereAuthSetZero=0;//By HeYC
 ////////////////////////////////////////////////////////////////////////////////////////
 volatile u16		uartwifiTimer;	
 
@@ -102,10 +102,10 @@ ALARM_RF  alarm;				    //RF报警指令
 u8 read_IR315_trig;        //?áè?IR?D????μ???
 u8 read_IR433_trig; 
 u8 send_flag=0;
-u32 TimeOut;
+u32 wrlsStudyTimeOut;
 u32 gAppCfgSuccTmout;
-u08 CodeBuf[IRCODELENGTH];
-u08 CodeHead,CodeTail;
+//By HeYC 0907	u08 CodeBuf[IRCODELENGTH];
+//By HeYC 0907	u08 CodeHead,CodeTail;
 RFS rfs;
 //设防撤防状态
 //by heyc 0906	u08 SetOrUnsetState[1];
