@@ -48,7 +48,7 @@ word wKeyTime;
 char lastkey;
 char key;
 int wifiCounter=0;
-uchar wifiReset=0;
+//By HeYC 0907	uchar wifiReset=0;
 uchar wifi_monitor_step=0;
 u16 lenths;
 
@@ -74,6 +74,9 @@ Return: 		no
 Others: 		no
 ********************************************************************************/
 u08 staClntTaskResult=0;
+
+void ResponseToDevFind();
+
 TASK IdelTask(void)
 {
 	u32 i;
@@ -92,12 +95,16 @@ TASK IdelTask(void)
 
 		//He:WifiBusy never be se to WIFI_DATA_BUSY
    		//He:if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_DATA_BUSY))&&(wifiEnable==WIFI_STATE_INIT_FINISH))
-   		if((WifiBusy==WIFI_IDEL)&&(wifiATCmdSetStat==WIFI_STATE_INIT_FINISH))//By HeYC
+   		//HeYC 0907	if( 	(WifiBusy==WIFI_IDEL) &&
+		//HeYC 0907		(wifiATCmdSetStat==WIFI_AT_CMD_OVER))//By HeYC
+		if( (wifiATCmdSetStat==WIFI_AT_CMD_OVER) )//By HeYC, WifiBusy is a strange variable
    		{
      			Auto_WIFI_Send();//发送数据
    		}
    
-   		if(((WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AT_BUSY))&&(wifiATCmdSetStat==WIFI_STATE_INIT_FINISH))
+   		//HeYC 0907if(	( (WifiBusy==WIFI_IDEL)||(WifiBusy==WIFI_AT_BUSY) )&&
+		//HeYC 0907	( wifiATCmdSetStat==WIFI_AT_CMD_OVER))
+		if( (wifiATCmdSetStat==WIFI_AT_CMD_OVER) )//By HeYC, WifiBusy is a strange variable
    		{
      			if(flagBgnConnectSvr)//20秒连接一次
      			{
@@ -111,7 +118,7 @@ TASK IdelTask(void)
 		              			//By HeYC0820 Authenticationflag=0;//关闭心跳
 		              			//By HeYC0820 HFlagWhereAuthSetZero=1;
 		              			wifi_monitor_step=WIFI_RESTART_PRE;
-			      				wifiATCmdSetStat=WIFI_STATE_PRE;//By HeYC 0822
+			      				wifiATCmdSetStat=WIFI_AT_CMD_NOT_BGN;//By HeYC 0822
 		              			ChangeTask(wifiResetTaskID); // 启动重启模块任务
 		              			ClientCounterA=0;
 		              			flagConnetedWithSvr=1;//停止连接服务器
@@ -218,6 +225,12 @@ TASK IdelTask(void)
 
 
 					CheckTimeOutAfterAPPCfg();//By HeYC
+
+					if(flagReplyDevFind>0){
+						flagReplyDevFind--;
+
+						ResponseToDevFind();
+					}
         
         				if(Alarmflag)
         				{
@@ -321,7 +334,7 @@ TASK IdelTask(void)
 					//He:Check if connected with tcp server
                 			if(flagConnetedWithSvr==0)
                 			{
-                 				if((++timerOfReConnectSvr>=15)&&(wifiATCmdSetStat==WIFI_STATE_INIT_FINISH)&&(flagBgnConnectSvr==0))//60秒连接一次(120)
+                 				if((++timerOfReConnectSvr>=15)&&(wifiATCmdSetStat==WIFI_AT_CMD_OVER)&&(flagBgnConnectSvr==0))//60秒连接一次(120)
                  				{
 							//By HeYC                  Authenticationflag=0;//关闭心跳
 							//By HeYC                  HFlagWhereAuthSetZero=3;
@@ -332,17 +345,17 @@ TASK IdelTask(void)
                  				}
                 			}
                    
-                			if(wifiReset)
-                			{
-                 				if(++wifiCounter>=2)//启动延时2秒后重新初始化WIFI模块
-                 				{
-                  					wifiReset=0;
-                  					wifiATCmdSetStat=WIFI_STATE_POWER_ON;//HeYC: from 1 to WIFI_STATE_POWER_ON 
-                  					uartFlushReceiveBuffer(COM_WIFI);
-                  					ledSetParam(10,30);
-                  					ChangeTask(wifiMonitorTaskID);//启动收发任务
-                 				}
-                			}
+                			//By HeYC 0907	if(wifiReset)
+                			//By HeYC 0907	{
+                 			//By HeYC 0907		if(++wifiCounter>=2)//启动延时2秒后重新初始化WIFI模块
+                 			//By HeYC 0907		{
+                  			//By HeYC 0907			wifiReset=0;
+                  			//By HeYC 0907			wifiATCmdSetStat=WIFI_STATE_POWER_ON;//HeYC: from 1 to WIFI_STATE_POWER_ON 
+                  			//By HeYC 0907			uartFlushReceiveBuffer(COM_WIFI);
+                  			//By HeYC 0907			ledSetParam(10,30);
+                  			//By HeYC 0907			ChangeTask(wifiMonitorTaskID);//启动收发任务
+                 			//By HeYC 0907		}
+                			//By HeYC 0907	}
 	  			}
 			
 			
@@ -388,7 +401,10 @@ TASKCFUNC(Init)
                 CreatTask(&wifiResetTaskID, wifiResetTask);//wifi重启任务
                
 		GETCONFIG();  //获取默认配置参数
-		wifiReset=1;
+//By HeYC 0907			wifiReset=1;
+		wifiATCmdSetStat=WIFI_AT_CMD_GOING;	//By HeYC 0907
+              uartFlushReceiveBuffer(COM_WIFI);		//By HeYC 0907
+              
                 ClientID=0;
                 WaitMONITOR_IDELSend=0;
                 WIFI_Hail=0;
@@ -427,9 +443,9 @@ TASKCFUNC(wifiMonitor)
 	}
 	else
 	{
-          if(wifiATCmdSetStat)
+//By HeYC0907           if(wifiATCmdSetStat)
           {
-           wifiATCmdSetStat=WIFI_STATE_INIT_FINISH;//HeYC: from 2 to WIFI_STATE_INIT_FINISH
+           wifiATCmdSetStat=WIFI_AT_CMD_OVER;//HeYC: from 2 to WIFI_STATE_INIT_FINISH
            strcpy(sbuffer,"?GTIME**");
            strcat(sbuffer,"\r\n");	
            lenths=strlen(sbuffer);
@@ -500,11 +516,17 @@ TASKCFUNC(wifiReset)
                 //  lenths=strlen(sbuffer);
                  // SMSSEND(lenths,sbuffer,ClientID);
                  // SMSSEND(lenths,sbuffer,4);//发送给服务器
+
+		    wifiATCmdSetStat=WIFI_AT_CMD_GOING;	//By HeYC 0907
+                  uartFlushReceiveBuffer(COM_WIFI);		//By HeYC 0907
                   ChangeTask(wifiMonitorTaskID);//启动wifi初始化任务
    		  break;
          default:
 	         WIFI_POWER_ON();
 	         wifi_monitor_step=WIFI_RESTART_PRE;
+
+		   wifiATCmdSetStat=WIFI_AT_CMD_GOING;	//By HeYC 0907
+                  uartFlushReceiveBuffer(COM_WIFI);		//By HeYC 0907
                  ChangeTask(wifiMonitorTaskID);//启动wifi初始化任务
    		 break;
    
@@ -846,6 +868,7 @@ void GetSWSTATES(void)
           strcpy(UDPPort,"40001");
          // wifi_monitor_step=WIFI_RESTART_PRE;
          // ChangeTask(wifiResetTaskID); // 启动重启模块任务
+         wifiATCmdSetStat=WIFI_AT_CMD_GOING;	//By HeYC 0907
          uartFlushReceiveBuffer(COM_WIFI); //By HeYC
           ChangeTask(wifiMonitorTaskID);//启动wifi初始化任务
          // IR_Decoding(2,1);//TEST  长按3秒运行指示灯快速闪烁，进入学习学习RF序列//改到命令哪里，前边的2代表433，1，315，后边的1改成对应的键值
@@ -1001,7 +1024,7 @@ u08 STAClienttask(void)
 	{
 		case WIFI_STA_PRE:
 			staInitMsg++;
-                        WifiBusy=WIFI_AT_BUSY;//模块开始发送数据，期间不可打断
+//By HeYC 0907	                        WifiBusy=WIFI_AT_BUSY;//模块开始发送数据，期间不可打断
 			break;
 		case WIFI_STA_INIT_CIFSR:
 			if (wifiCmdCIFSR(1) != WIFI_NONE)   //
@@ -1026,7 +1049,7 @@ u08 STAClienttask(void)
                        if (wret != WIFI_NONE)//
 			            {
                            staInitMsg = WIFI_STA_PRE;
-                           WifiBusy=WIFI_IDEL;
+//By HeYC 0907	                           WifiBusy=WIFI_IDEL;
                            ret=WIFI_OK;
                            if(wret==WIFI_OK)
                            {
@@ -1042,12 +1065,12 @@ u08 STAClienttask(void)
                      }
                        break;
 		case WIFI_STA_ERROR:
-			WifiBusy=WIFI_IDEL;
+//By HeYC 0907				WifiBusy=WIFI_IDEL;
 			staInitMsg = WIFI_STA_PRE;
                         ret=WIFI_ERR;
 			break;
 		default:
-			WifiBusy=WIFI_IDEL;
+//By HeYC 0907				WifiBusy=WIFI_IDEL;
 			staInitMsg = WIFI_STA_PRE;
                         ret=WIFI_ERR;
 			break;
@@ -1657,6 +1680,7 @@ void  IRProcess(void)
  
 }
 void ResponseToAppCfg();
+
 void  CheckTimeOutAfterAPPCfg(void)
 {
 
@@ -1678,6 +1702,9 @@ void  CheckTimeOutAfterAPPCfg(void)
 	          strcpy(UDPPort,"59999");
 
 		  wifiInitMsg=WIFI_INIT_PRE;//Ensure task will be started correctly
+
+		  wifiATCmdSetStat=WIFI_AT_CMD_GOING;	//By HeYC 0907
+                uartFlushReceiveBuffer(COM_WIFI);		//By HeYC 0907
        	   ChangeTask(wifiMonitorTaskID);//启动wifi初始化任务
 		 //End:By HeYC 0822
    }

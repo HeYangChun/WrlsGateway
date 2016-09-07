@@ -643,24 +643,26 @@ u08 wifiReadResponse(void)
                 // else if(strncmp(profilecmds,DeviceDiscover,10)==0)// 设备发现指令及其应答（局域网）
                   else if((line[10]==0x48)&&(line[11]==0x65)&&(line[12]==0x59)&&(line[17]==0x60)&&(line[18]==0x00)&&(line[19]==0x01))
                     {  
-                      for(i=0;i<10;i++)
-                         {
-                           sbuffer[i]=DeviceDiscover_answer[i];
-                         }
-                      for(i=10;i<16;i++)
-                      {
-                         sbuffer[i]=macidHEX[i-10];
-                      }
+
+					flagReplyDevFind=2;
+                      //By HeYC 0907	for(i=0;i<10;i++)
+                      //By HeYC 0907   {
+                      //By HeYC 0907     sbuffer[i]=DeviceDiscover_answer[i];
+                      //By HeYC 0907   }
+                      //By HeYC 0907for(i=10;i<16;i++)
+                      //By HeYC 0907{
+                      //By HeYC 0907   sbuffer[i]=macidHEX[i-10];
+                      //By HeYC 0907}
                       //strcat(&sbuffer[10],macidHEX);
-                      sbuffer[16] = 0x31;
-                      sbuffer[17] = 0x31;
-                      sbuffer[18] = 0x66;
-                      sbuffer[19] = 0x66;
-                      sbuffer[20] = curSecuModeShadow;//By HeYC from SetOrUnsetState[0] to SetOrUnsetStateflag
-                      strcat(&sbuffer[21],RCR_ETX);
-                    //  strcat(&sbuffer[23],"\r\n");
-                      lenth=24;//strlen(sbuffer);
-                      SMSSEND(lenth,sbuffer,2);
+                      //By HeYC 0907sbuffer[16] = 0x31;
+                      //By HeYC 0907sbuffer[17] = 0x31;
+                      //By HeYC 0907sbuffer[18] = 0x66;
+                      //By HeYC 0907sbuffer[19] = 0x66;
+                      //By HeYC 0907sbuffer[20] = curSecuModeShadow;//By HeYC from SetOrUnsetState[0] to SetOrUnsetStateflag
+                      //By HeYC 0907strcat(&sbuffer[21],RCR_ETX);
+                      //By HeYC 0907//  strcat(&sbuffer[23],"\r\n");
+                      //By HeYC 0907lenth=24;//strlen(sbuffer);
+                      //By HeYC 0907SMSSEND(lenth,sbuffer,2);
                     }
                  //else if(strncmp(profilecmds,WirelearnAndControl,10)==0)// 无线学习与控制指令及其应答（局域网）
                  else if((line[10]==0x48)&&(line[11]==0x65)&&(line[12]==0x59)&&(line[17]==0x61)&&(line[18]==0x00)&&(line[19]==0x03))
@@ -1350,6 +1352,29 @@ void ResponseToAppCfg(){
          SMSSEND(lenth,sbuffer,2);
          Auto_WIFI_Send();//发送数据
 	
+}
+
+void ResponseToDevFind(){
+	int i=0;
+	
+	for(i=0;i<10;i++)
+       {
+       	sbuffer[i]=DeviceDiscover_answer[i];
+	}
+       for(i=10;i<16;i++)
+       {
+       	sbuffer[i]=macidHEX[i-10];
+	}
+       //strcat(&sbuffer[10],macidHEX);
+       sbuffer[16] = 0x31;
+       sbuffer[17] = 0x31;
+       sbuffer[18] = 0x66;
+       sbuffer[19] = 0x66;
+       sbuffer[20] = curSecuModeShadow;//By HeYC from SetOrUnsetState[0] to SetOrUnsetStateflag
+       strcat(&sbuffer[21],RCR_ETX);
+       //  strcat(&sbuffer[23],"\r\n");
+       lenth=24;//strlen(sbuffer);
+       SMSSEND(lenth,sbuffer,2);
 }
 //End:By HeYC 0906
 

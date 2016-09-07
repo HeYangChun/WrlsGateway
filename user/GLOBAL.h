@@ -356,7 +356,7 @@ extern char   UDPPort[10];//正常工作时的UDP端口
 extern u08  waitsmssend;  //收到等待'>'启动标志位，表示可以发送数据到WIFI
 //by heyc 0906	extern u08  smssenddata;
 //by heyc 0906	extern u08 keystate;//按键状态
-extern u08  WifiBusy; //模块忙，不能回复数据
+//By HeYC 0907	extern u08  WifiBusy; //模块忙，不能回复数据
 
 ///rtc
 //extern  RTCTIME tm;
@@ -417,6 +417,7 @@ extern byte HFlagWhereAuthSetZero;
 extern volatile byte secModChangedFlag;//By HeYC
 extern int wifiInitMsg;//By HeYC 
 extern CfgParaInFlash   gCfgPara;//By HeYC 0906
+extern volatile byte         flagReplyDevFind;//BY HeYC 0907
 /////////////////////////////////////////////////////////////////////
 
 #endif // !defined(_GLOBAL_H_) 

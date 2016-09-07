@@ -33,6 +33,7 @@ volatile word         Heartbeattimer5s=0;
 volatile byte         Heartbeattimer5s_count=0;
 volatile byte         Heartbeattimer5sflag=0;
 volatile byte         flagGotAppCfgInfo=0;
+volatile byte         flagReplyDevFind=0;//BY HeYC 0907
 //By HeYC 0906	volatile byte    SetOrUnsetStateflag=0;//By HeYC
 volatile byte    curSecuModeShadow=0;//By HeYC 0906
 byte HFlagWhereAuthSetZero=0;//By HeYC
@@ -46,7 +47,7 @@ u08    WIFI_Head;//WiFi环形缓冲区头   当头和尾不相等的时候就有数据要发送，当头和
 u08    WIFI_Hail;//WiFi环形缓冲区尾   
 //by HeYC 0906	u08    WIFIENBLE;     // //wifi使能
 u08    WaitMONITOR_IDELSend; ////等待wifi发送数据完成标志位
-u08    WifiBusy=0; //模块忙，不能回复数据,He: let it equal WIFI_IDEL(0) at beginning.
+//By HeYC 0907	u08    WifiBusy=0; //模块忙，不能回复数据,He: let it equal WIFI_IDEL(0) at beginning.
 int    smsSMSStep;//WiFi信息发送步奏
 //By HeYC 0906	char   macid[20]="1AFE34F3AFD4";//网卡mac地址
 char   macidHEX[6]={0};//By HeYC let it equal init valal
