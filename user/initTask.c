@@ -58,7 +58,7 @@ u08 KEYPRESS_Long;
 
 //By HeYC 0907	u08 rets;
 //By HeYC 0907	u08  TEMP_cmd[2];	//
-u08 Alarmflag=0;
+u08 almBrdcstFlag=0;
 volatile byte secModChangedFlag=0;//He from u08 to volatile byte
 u08 LED_staflag=0;
 u08 LED_stpflag=0;
@@ -233,7 +233,7 @@ TASK IdelTask(void)
 						ResponseToDevFind();
 					}
         
-        				if(Alarmflag)
+        				if(almBrdcstFlag>0)
         				{
           					for(i=0;i<10;i++)     
           					{
@@ -250,7 +250,7 @@ TASK IdelTask(void)
           					// strcat(&sbuffer[16],"\r\n");
           					lenth=21;//strlen(sbuffer);
           					SMSSEND(lenth,sbuffer,1);    //广播报警信息
-          					Alarmflag=0;
+          					almBrdcstFlag--;
         				}
         
         				if(secModChangedFlag==3)//安防状态改变上报服务器
@@ -365,7 +365,14 @@ TASK IdelTask(void)
 
 			//Bgn:By heYC 0822
 			if(curSecuMode!=curSecuModeShadow){
+				
 				curSecuMode=curSecuModeShadow;
+				
+				if(curSecuMode==0){
+					//unset, clear all alm source no
+					memset(&alarm.almSrcNoCache[0],	INVALID_ALM_SRC_NO,		MAX_ALM_SENSOR_NUM);
+				}
+				
 				write_flash_array(SW_SETorUNSETSTATE,sizeof(curSecuMode),(u08 *)&curSecuMode);
 			}
 			//End:By HeYC 0822
@@ -1713,6 +1720,28 @@ void  CheckTimeOutAfterAPPCfg(void)
   } 
 }
 
+u08 IsAlarmSrcNoTriggered(u08 almSrcNo)
+{
+	int i=0;
+	for(i=0;i<MAX_ALM_SENSOR_NUM;i++){
+		if(alarm.almSrcNoCache[i]==almSrcNo)
+			return 1;
+	}
+
+	return 0;
+}
+
+void CacheAlarmSrcNoTriggered(u08 almSrcNo)
+{
+	int i=0;
+	for(i=0;i<MAX_ALM_SENSOR_NUM;i++){
+		if(alarm.almSrcNoCache[i]==INVALID_ALM_SRC_NO){
+			alarm.almSrcNoCache[i]=almSrcNo;
+		}
+	}
+}
+
+
 /*******************************************************************************
 Function: 	 void  alarmRFTask(void)
 Description: 	   报警任务
@@ -1730,7 +1759,7 @@ void  alarmRFTask(void)//100ms任务
 //by HeYC	 int alarmDate;//报警读取的数据高低判断
 //By HeYC	 int rfDate;//flash读取的数据高低判断
 //By HeYC	 int rfcmd;//flash读取的8位数据转16位数据
-	 u08 alarmActive=0;
+	 u08 alarmTriggered=0;
 	 u08 rfCodingRcv=0;//By HeYC 
 	 u08 rfCodingERom=0;//By HeYC
 	 int data1InCmdERom=0;//by HeYC
@@ -1738,11 +1767,11 @@ void  alarmRFTask(void)//100ms任务
 
 	if(curSecuModeShadow==0){
 		//not set security, nothing need to do.
-		//for test not return,  return;
+		return;
 	}
 
-	if(	rfInterLock!=IRRS_315_RCV_SUCC && 
-		rfInterLock!=IRRS_433_RCV_SUCC){
+	if(	rfIdleRcvStat!=IRRS_315_RCV_SUCC && 
+		rfIdleRcvStat!=IRRS_433_RCV_SUCC){
 		//No alarm message from sensor detected, nothing need to do
 		//this variable has another values:
 		//IRRS_IDLE,
@@ -1776,7 +1805,7 @@ void  alarmRFTask(void)//100ms任务
    	for(i=0;i<80;i++)
    	{
    		//He:Check alarm is 433 or 315M, read data len saved from different address firstly
-   		switch (rfInterLock)
+   		switch (rfIdleRcvStat)
 		{
 			case IRRS_315_RCV_SUCC://rf315
 				disableInterrupts();  //读之前先关中断
@@ -1805,7 +1834,7 @@ void  alarmRFTask(void)//100ms任务
 	    	//He:Why len++? because the first  bytes is saved as length.
 	      	len++;
 	      	disableInterrupts();  //读之前先关中断
-	      	if(rfInterLock==IRRS_433_RCV_SUCC)   //433M
+	      	if(rfIdleRcvStat==IRRS_433_RCV_SUCC)   //433M
 	      	{
 	       	// if(len*2<=128)
 	       	// {
@@ -1816,7 +1845,7 @@ void  alarmRFTask(void)//100ms任务
 	       	//  AT24__Read_Page((RF433_PRE_ADDR_SPL+OffsetAddr*i),eeprombuf,len*2); 
 	       	// }
 	      	}
-	      	else if(rfInterLock==IRRS_315_RCV_SUCC) //315M
+	      	else if(rfIdleRcvStat==IRRS_315_RCV_SUCC) //315M
 	      	{
 	       	//if(len*2<=128)
 	       	//{
@@ -1836,7 +1865,7 @@ void  alarmRFTask(void)//100ms任务
 	      	//By HeYC 0830	}
 
 		//He:The last is the stop flag, addr 0 is len, addr 1 and addr 2 not used
-		alarmActive=1;// intial with 1, if not equal, will be set to 0;
+		alarmTriggered=1;// intial with 1, if not equal, will be set to 0;
 	      	//By HeYC	for(j=3;j<(len-1);j++)//去除数据长度、引导码、同步码不做判断
 	      	len--;//By HeYC:remove len field at the first position
 	      	for(j=1;j<(len/2);j++)//By HeYC
@@ -1866,7 +1895,7 @@ void  alarmRFTask(void)//100ms任务
 			}
 
 			if(rfCodingERom!=rfCodingRcv){
-				alarmActive=0;
+				alarmTriggered=0;
 				break;
 			}
 				
@@ -1903,40 +1932,47 @@ void  alarmRFTask(void)//100ms任务
 	      	}      
 	    //}
 			
-		if(alarmActive==1)//对码成功，发送报警信号
+		if(alarmTriggered==1)//对码成功，发送报警信号
 	    	{
-			alarm.NO=i;//探头编号
-	     		
-	     		secModChangedFlag=3;		//By HeYC let loop send out stat report
-	     		curSecuModeShadow=2;	//By HeYC	     		
-	     		if(alarm.sending==0)		//同一次报警只发送一次, Fucking logic  HeYC
-	     		{
-	      			alarm.sending=1;
-	      			alarm.timeCounter=0;
-	      			//报警信号发送，通过发送函数发送探头编号
-	      			for(i=0;i<10;i++)     
-	      			{
-	        			sbuffer[i]=ProbeAlarm[i];
-	      			}
-	      			for(i=10;i<16;i++)
-	      			{
-	        			sbuffer[i]=macidHEX[i-10];
-	      			}
+	    		if(IsAlarmSrcNoTriggered(i)==0){
+				//Should report this alarm
+				CacheAlarmSrcNoTriggered(i);
+				
+				alarm.NO=i;//探头编号
+				
+		     		secModChangedFlag=3;		//By HeYC let loop send out stat report
+		     		
+		     		curSecuModeShadow=2;	//By HeYC	     		
+		     		
+		     		//By HeYC 0908	if(alarm.sending==0)		//同一次报警只发送一次, Fucking logic  HeYC
+		     		//By HeYC 0908	{
+		      		//By HeYC 0908		alarm.sending=1;
+		      		//By HeYC 0908		alarm.timeCounter=0;
+		      			//报警信号发送，通过发送函数发送探头编号
+		      			for(i=0;i<10;i++)     
+		      			{
+		        			sbuffer[i]=ProbeAlarm[i];
+		      			}
+		      			for(i=10;i<16;i++)
+		      			{
+		        			sbuffer[i]=macidHEX[i-10];
+		      			}
 
-	      			sbuffer[16] = alarm.NO>>8;	//keyValH 
-	      			sbuffer[17] = alarm.NO&0xff;	//keyValL 
-	      			strcat(&sbuffer[18],RCR_ETX);
-	      			lenth=21;
-	      			SMSSEND(lenth,sbuffer,4);    //向服务器发送报警信息
+		      			sbuffer[16] = alarm.NO>>8;	//keyValH 
+		      			sbuffer[17] = alarm.NO&0xff;	//keyValL 
+		      			strcat(&sbuffer[18],RCR_ETX);
+		      			lenth=21;
+		      			SMSSEND(lenth,sbuffer,4);    //向服务器发送报警信息
 
-		  		//He:this flag will be detected in initTask loops and will be used to send a broadcast in local network
-	      			Alarmflag=1;
-			}
-	     		else
-	     		{
-	       		alarm.timeCounter=0;
-	     		}
-	     		//
+			  		//He:this flag will be detected in initTask loops and will be used to send a broadcast in local network
+		      			almBrdcstFlag=2;		//broadcast 2 times
+				//By HeYC 0908	}
+		     		//By HeYC 0908	else
+		     		//By HeYC 0908	{
+		       	//By HeYC 0908		alarm.timeCounter=0;
+		     		//By HeYC 0908	}
+		     		//
+	    		}
 	     		break;//跳出循环80
 	  	}
 
@@ -1957,16 +1993,16 @@ void  alarmRFTask(void)//100ms任务
 	}
  //HeYC0830}
  
-	if(++alarm.timeCounter>=100)//超过10秒未收到报警信号，报警信号消失，再次触发需报警
- 	{
-   		alarm.sending=0;
- 	}
+//By HeYC 0908	if(++alarm.timeCounter>=100)//超过10秒未收到报警信号，报警信号消失，再次触发需报警
+//By HeYC 0908	 {
+//By HeYC 0908	 		alarm.sending=0;
+//By HeYC 0908	 }
 
 	//reset the flags for new receiving...
 	alarm.guide=0;
-	rfInterLock=IRRS_IDLE;//By HeYC, finished dealng, clean the flag
+	rfIdleRcvStat=IRRS_IDLE;//By HeYC, finished dealng, clean the flag
 	alarm.DECODESTEP=IR_GUIDE;
-//By HeYC0901	alarm.Learnflag=0;	
+	//By HeYC0901	alarm.Learnflag=0;	
 	alarm.PulseN=0;
 	IR.cmd[0]=0;
 }

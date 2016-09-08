@@ -31,7 +31,9 @@
 //0907: big changes had been happened, in flash struct, variable renamed ,etc...
 //#define VER_INFO				"GW_V20"
 //0907: renamed some variables make it more readable, and removed many variables that not used to release program space
-#define VER_INFO				"GW_V20"
+//#define VER_INFO				"GW_V20"
+//0908	renamed rfInterLock , canceled the test stat of security alarm
+#define VER_INFO				"GW_V21"
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
 static int _wifiRet = WIFI_NONE;

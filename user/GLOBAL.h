@@ -164,7 +164,8 @@ typedef struct __AIRCON
 #define UART3_RX_BUFFER_SIZE		1	//COM1
 #define COMM1_BUF_LEN	10
 #define TIMING_MONITOR_WIFI		3600*2	// 
-
+#define MAX_ALM_SENSOR_NUM		8		//By HeYC 0908
+#define INVALID_ALM_SRC_NO			0xFF	//By HeYC 0908
 /////////////////////////////////////////////////////////
 typedef  byte (*AppCommRecvPtr)(const byte *buf, byte len, byte Addr);
 typedef struct APP
@@ -287,8 +288,9 @@ typedef struct _ALARM_RF
  u32 PulseN;   //脉冲数，变量
 //By HeYC 0831 u32 PulseLEN; //存储脉冲长度，存在flash中
  u32 Tout;
- u32 timeCounter;//超时计数器
- u08 sending;//报警信号已发送
+//By HeYC 0908	 u32 timeCounter;//超时计数器
+//By HeYC 0908	 u08 sending;//报警信号已发送
+ u08 almSrcNoCache[MAX_ALM_SENSOR_NUM];//By HeYC 0908	Max 8 alarm sensors
 }ALARM_RF;
 
 
@@ -406,7 +408,7 @@ extern u32 gAppCfgSuccTmout;
 extern u08	curSecuMode;//by heyc 0906
 extern volatile byte curSecuModeShadow;
 //By HeYC 	extern char rfInterLock;
-extern IDLE_RF_RCV_STAT rfInterLock;//By HeYC
+extern IDLE_RF_RCV_STAT rfIdleRcvStat;//By HeYC
 //By HeYC 0830	extern u08 alarmActive;//报警信号对码成功
 extern u08 Authenticationflag;
 extern u08 CNT;

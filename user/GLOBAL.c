@@ -113,7 +113,7 @@ u08 curSecuMode;
 //By HeYC 	u08 SetOrUnsetStateflag;
 
 //By HeYC 	char rfInterLock=0;//rfInterLock=2时433有效，315被锁定；=1时315有效，433被锁定,=3时，
-IDLE_RF_RCV_STAT rfInterLock=IRRS_IDLE;//By HeYC;
+IDLE_RF_RCV_STAT rfIdleRcvStat=IRRS_IDLE;//By HeYC, means received some 315/433 coding when is not in learning...
                   //表示315有报警信号未处理，期间315,433都被锁定，需进行报警解码后解除锁定，=4时表示344有报警信号未处理。
 //By heyc 0830	u08 alarmActive=0;//报警信号对码成功
 u08 CNT;

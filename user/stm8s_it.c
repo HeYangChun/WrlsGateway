@@ -466,7 +466,7 @@ if(read_IR433_trig!=hTest){
 		//He0830		(rfInterLock!=4) &&
 		//He0830		(IR.REVFLAG==0) &&
 		//He0830		(rfs.type==0)		)//433是否有报警信号
-		if( 	( (rfInterLock==IRRS_IDLE) || (rfInterLock==IRRS_433_GUIDE_RCVD) ) &&
+		if( 	( (rfIdleRcvStat==IRRS_IDLE) || (rfIdleRcvStat==IRRS_433_GUIDE_RCVD) ) &&
 			(rfs.type==0)		)
           	{
             		switch  (alarm.DECODESTEP)
@@ -486,7 +486,7 @@ if(read_IR433_trig!=hTest){
                                			IR.cmd[1]=alarm.Rcounter;
                                			alarm.PulseN=1;
                                			alarm.guide=1;
-                               			rfInterLock=IRRS_433_GUIDE_RCVD;//读取到引导码，433被锁定，不可去读探头报警
+                               			rfIdleRcvStat=IRRS_433_GUIDE_RCVD;//读取到引导码，433被锁定，不可去读探头报警
                               
                             		}
 			  		}
@@ -510,7 +510,7 @@ if(read_IR433_trig!=hTest){
                               			else
                               			{
                                 				alarm.guide=0;
-                                				rfInterLock=IRRS_IDLE;//解除锁定
+                                				rfIdleRcvStat=IRRS_IDLE;//解除锁定
                               			}
                            			}
                            			else
@@ -576,7 +576,7 @@ if(read_IR433_trig!=hTest){
                   					alarm.PulseN=0;
                   					IR.cmd[0]=0;
                   					alarm.guide=0;
-                  					rfInterLock=IRRS_IDLE;//解除锁定
+                  					rfIdleRcvStat=IRRS_IDLE;//解除锁定
                   					return;
                 				}
               			}
@@ -593,7 +593,7 @@ if(read_IR433_trig!=hTest){
 //By HeYC0901                      						alarm.Learnflag=1;
 			         					// alarm.REVFLAG=0;
 			          					IR.cmd[0]=alarm.PulseN;	//脉冲长度
-                      						rfInterLock=IRRS_433_RCV_SUCC;//锁定
+                      						rfIdleRcvStat=IRRS_433_RCV_SUCC;//锁定
                     						}
                     						else
                     						{
@@ -603,7 +603,7 @@ if(read_IR433_trig!=hTest){
                       						alarm.PulseN=0;
                       						IR.cmd[0]=0;
                       						alarm.guide=0;
-                      						rfInterLock=IRRS_IDLE;//解除锁定
+                      						rfIdleRcvStat=IRRS_IDLE;//解除锁定
                       						return;
                     						}
                   					}
@@ -621,7 +621,7 @@ if(read_IR433_trig!=hTest){
                      			alarm.PulseN=0;
                       			IR.cmd[0]=0;
                       			alarm.guide=0;
-				              rfInterLock=IRRS_IDLE;//解除锁定
+				              rfIdleRcvStat=IRRS_IDLE;//解除锁定
 				       }
 		      			break;
 
@@ -632,7 +632,7 @@ if(read_IR433_trig!=hTest){
                       		alarm.PulseN=0;
                       		IR.cmd[0]=0;
                       		alarm.guide=0;
-                      		rfInterLock=IRRS_IDLE;//解除锁定
+                      		rfIdleRcvStat=IRRS_IDLE;//解除锁定
 		      			break;
 	      		}
 		}        
@@ -836,7 +836,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
 	//By HeYC 0830		  	(rfInterLock!=4)&&
 	//By HeYC 0830		  	(IR.REVFLAG==0)&&
 	//By HeYC 0830		  	(rfs.type==0)				)//315是否有报警信号
-	  if(	( (rfInterLock==IRRS_IDLE) || (rfInterLock==IRRS_315_GUIDE_RCVD) )&&
+	  if(	( (rfIdleRcvStat==IRRS_IDLE) || (rfIdleRcvStat==IRRS_315_GUIDE_RCVD) )&&
 		  (rfs.type==0) )//315是否有报警信号
           {
             switch  (alarm.DECODESTEP)
@@ -857,7 +857,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
                                IR.cmd[1]=alarm.Rcounter;
                                alarm.PulseN=1;
                                alarm.guide=1;
-                               rfInterLock=IRRS_315_GUIDE_RCVD;//读取到引导码，433被锁定，不可去读探头报警
+                               rfIdleRcvStat=IRRS_315_GUIDE_RCVD;//读取到引导码，433被锁定，不可去读探头报警
                               
                             }
 			  }
@@ -882,7 +882,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
                               else
                               {
                                 alarm.guide=0;
-                                rfInterLock=IRRS_IDLE;//解除锁定
+                                rfIdleRcvStat=IRRS_IDLE;//解除锁定
                               }
                            }
                            else
@@ -934,7 +934,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
                   alarm.PulseN=0;
                   IR.cmd[0]=0;
                   alarm.guide=0;
-                  rfInterLock=IRRS_IDLE;//解除锁定
+                  rfIdleRcvStat=IRRS_IDLE;//解除锁定
                   return;
                 }
               }
@@ -953,7 +953,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
 //By HeYC0901                      alarm.Learnflag=1;
 			         // alarm.REVFLAG=0;
 			          IR.cmd[0]=alarm.PulseN;	//脉冲长度
-                      rfInterLock=IRRS_315_RCV_SUCC;//锁定
+                      rfIdleRcvStat=IRRS_315_RCV_SUCC;//锁定
                     }
                     else
                     {
@@ -963,7 +963,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
                       alarm.PulseN=0;
                       IR.cmd[0]=0;
                       alarm.guide=0;
-                      rfInterLock=IRRS_IDLE;//解除锁定
+                      rfIdleRcvStat=IRRS_IDLE;//解除锁定
                       return;
                     }
                   }
@@ -1006,7 +1006,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
                       alarm.PulseN=0;
                       IR.cmd[0]=0;
                       alarm.guide=0;
-                      rfInterLock=IRRS_IDLE;//解除锁定
+                      rfIdleRcvStat=IRRS_IDLE;//解除锁定
               }
 		      break;
 		   default:
@@ -1016,7 +1016,7 @@ __interrupt void EXTI_PORTE_IRQHandler(void)
                       alarm.PulseN=0;
                       IR.cmd[0]=0;
                       alarm.guide=0;
-                      rfInterLock=IRRS_IDLE;//解除锁定
+                      rfIdleRcvStat=IRRS_IDLE;//解除锁定
 		      break;
 	      }
           }
