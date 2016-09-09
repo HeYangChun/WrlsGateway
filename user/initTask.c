@@ -1767,6 +1767,13 @@ void  alarmRFTask(void)//100ms»ŒŒÒ
 
 	if(curSecuModeShadow==0){
 		//not set security, nothing need to do.
+		//clear any thing if detected
+		if(	rfIdleRcvStat==IRRS_315_GUIDE_RCVD ||
+			rfIdleRcvStat==IRRS_433_RCV_SUCC){
+
+			rfIdleRcvStat=IRRS_IDLE;
+			alarm.DECODESTEP=IR_GUIDE;
+		}
 		return;
 	}
 

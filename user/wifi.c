@@ -33,7 +33,9 @@
 //0907: renamed some variables make it more readable, and removed many variables that not used to release program space
 //#define VER_INFO				"GW_V20"
 //0908	renamed rfInterLock , canceled the test stat of security alarm
-#define VER_INFO				"GW_V21"
+//#define VER_INFO				"GW_V21"
+//0909:	fixed a bug if alarm triggered when secutiry is not set, if security is set, alarm will be triggered.
+#define VER_INFO				"GW_V22"
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
 static int _wifiRet = WIFI_NONE;
@@ -1718,9 +1720,9 @@ int wifiCmdCIPSTART_UDP(char* port,int repeat) //ÅäÖÃUDP
           strcat(buf,"255.255.255.255");
           strcat(buf,"\",");
           strcat(buf,port);
-          strcat(buf,"\,");
+          strcat(buf,",");//by HeYC 0909 from \, -> ,
           strcat(buf,port);
-          strcat(buf,"\,");
+          strcat(buf,",");//by HeYC 0909 from \, -> ,
           strcat(buf,"2");
         }
 	return (WifiCommand(buf, WIFI_NONE, 200, repeat));
@@ -1736,7 +1738,7 @@ int wifiCmdCIPSTART_UDPRADIO(int repeat) //ÅäÖÃUDP¹ã²¥
           strcat(buf,"255.255.255.255");
           strcat(buf,"\",");
           strcat(buf,"40003");
-          strcat(buf,"\,");
+          strcat(buf,",");//by HeYC 0909 from \, -> ,
           strcat(buf,"40003");
         }
 	return (WifiCommand(buf, WIFI_NONE, 200, repeat));
