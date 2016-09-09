@@ -14,7 +14,7 @@
 #include "gpio.h"
 #include "uart.h"
 #include "Delay.h"
-#include "ADCProcess.h"
+//By HeYC 0908  #include "ADCProcess.h"
 #include "AT24C32A.h"
 #include "IR.h"
 

@@ -135,7 +135,7 @@ u08 wifiReadResponse(void)
    int i;
    u08 cmdBuf[5];
    u08 cmdLength=4;//Ä¬ÈÏ4×Ö½Ú
-   u08 intflash[40]={0};
+//By HeYC 0908   u08 intflash[40]={0};
  // char strings[sBUFFER_SIZE]={0};
    char profilecmds[sBUFFER_SIZE];
    char stringstemp[20];

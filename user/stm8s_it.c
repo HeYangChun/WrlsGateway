@@ -23,7 +23,7 @@
 #include "stm8s_it.h"
 #include "uart.h"
 #include "Delay.h"
-#include "ADCProcess.h"
+//By HeYC 0908  #include "ADCProcess.h"
 #include "wifi.h"
 #include "GLOBAL.h"
 #include "gpio.h"

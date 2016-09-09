@@ -1,5 +1,5 @@
 #include "stm8s_lib.h"
-#include "CircleBuffer.h"
+//By HeYC 0908	#include "CircleBuffer.h"
 #include "uart.h"
 #include "GLOBAL.h"
 #include "buffer.h"
