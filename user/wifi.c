@@ -35,7 +35,9 @@
 //0908	renamed rfInterLock , canceled the test stat of security alarm
 //#define VER_INFO				"GW_V21"
 //0909:	fixed a bug if alarm triggered when secutiry is not set, if security is set, alarm will be triggered.
-#define VER_INFO				"GW_V22"
+//#define VER_INFO				"GW_V22"
+//0912: removed some spaces to make it more readable in IRProcess
+#define VER_INFO				"GW_V23"
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
 static int _wifiRet = WIFI_NONE;

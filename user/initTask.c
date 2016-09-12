@@ -1512,180 +1512,179 @@ void  IRProcess(void)
   u16 len,i;
  //u08 addr[4];
 
- if(	(IR.REVFLAG==RF_TYPE_433) ||
- 	(IR.REVFLAG==RF_TYPE_315) ||
- 	(IR.REVFLAG==RF_TYPE_INFRA)	)  //433M 315M 红外
- {
-	 if (sTimeout(&wrlsStudyTimeOut, 1000)) // 10S超时退出
-	  {
-	   IR.REVFLAG=RF_TYPE_NULL;//超过10秒为学习成功自动退出
-	   ledSetParam(50,100);//指示灯回复正常闪烁
-           rfs.type=0;
-           //学习超时退出发送学习失败应答
-           IR.Learnflag=0;;//超过10秒为学习成功自动退出
-           ledSetParam(50,100);//指示灯回复正常闪烁
-           rfs.type=0;
-           for(i=0;i<10;i++)     //发送学习失败应答
-           {
-             sbuffer[i]=WirelearnAndControl_answer[i];
-           }
-           sbuffer[10] = rfs.number>>8;//keyValH 
-           sbuffer[11] = rfs.number&0xff;//keyValL 
-           sbuffer[12] = 0;
-           strcat(&sbuffer[13],RCR_ETX);
-           // strcat(&sbuffer[16],"\r\n");
-           lenth=16;//strlen(sbuffer);
-           SMSSEND(lenth,sbuffer,2);
-	  }
-	  else
-	  {
-	   /*if((IR.Tout>=IR_END)&&(IR.DECODESTEP==IR_DECODE))
-	   {
-		IR.PulseN++;//输出时滞后一个脉冲，所以加一
-		//IR.Rcounter=(TIM2->CNTRH<<8)+TIM2->CNTRL;//
-                IR.Rcounter=(TIM2->CNTRH)*256;
-	        IR.Rcounter+=TIM2->CNTRL;//
-	        TIM2->CNTRH=0;
-                TIM2->CNTRL=0;
-		IR.cmd[IR.PulseN]=IR.Rcounter;
-		IR.Learnflag=1;//
-		IR.REVFLAG=0;
-		IR.cmd[0]=IR.PulseN;	//脉冲长度
-	   }*/
-	  }
-	  
- }
- if(IR.Learnflag==1) //学习正常完成
- {
-  IR.Learnflag=0;//
-  len=IR.PulseN+1;//包括长度保存至flash
-  disableInterrupts();  //写之前先关中断
-  /*for(i=0;i<len;i++)
-  {
-      TEMP_cmd[0]=(u08)((IR.cmd[i]>>8)&0x00ff);
-      TEMP_cmd[1]=(u08)(IR.cmd[i]&0x00ff);
-      AT24_Write_page((RF433_PRE_ADDR+OffsetAddr*rfs.number+i*2),TEMP_cmd,2);//RAM有限，2字节存储一次
-      for(int j=0;j<1000;j++) {;}  // 8us延时
-  }*/
-  for(i=0;i<len;i++)
-  {
-      eeprombuf[i*2]=(u08)((IR.cmd[i]>>8)&0x00ff);
-      eeprombuf[i*2+1]=(u08)(IR.cmd[i]&0x00ff);    
-  }
-  if(rfs.type==2)  //433
-  {
-    if(len*2<=128)
-    {
-      AT24_Write_page((RF433_PRE_ADDR+OffsetAddr*rfs.number),eeprombuf,len*2);//RAM有限，2字节存储一次
-    }
-    else if(len*2>128)
-    {
+	if(	(IR.REVFLAG==RF_TYPE_433) ||
+	 	(IR.REVFLAG==RF_TYPE_315) ||
+	 	(IR.REVFLAG==RF_TYPE_INFRA)	)  //433M 315M 红外
+	{
+		if (sTimeout(&wrlsStudyTimeOut, 1000)) // 10S超时退出
+		{
+			IR.REVFLAG=RF_TYPE_NULL;//超过10秒为学习成功自动退出
+			ledSetParam(50,100);//指示灯回复正常闪烁
+			rfs.type=0;
+	           	//学习超时退出发送学习失败应答
+	           	IR.Learnflag=0;;//超过10秒为学习成功自动退出
+			ledSetParam(50,100);//指示灯回复正常闪烁
+			rfs.type=0;
+			for(i=0;i<10;i++)     //发送学习失败应答
+			{
+				sbuffer[i]=WirelearnAndControl_answer[i];
+			}
+			sbuffer[10] = rfs.number>>8;//keyValH 
+			sbuffer[11] = rfs.number&0xff;//keyValL 
+			sbuffer[12] = 0;
+			strcat(&sbuffer[13],RCR_ETX);
+			// strcat(&sbuffer[16],"\r\n");
+			lenth=16;//strlen(sbuffer);
+			SMSSEND(lenth,sbuffer,2);
+		}
+		else
+		{
+			/*if((IR.Tout>=IR_END)&&(IR.DECODESTEP==IR_DECODE))
+			{
+				IR.PulseN++;//输出时滞后一个脉冲，所以加一
+				//IR.Rcounter=(TIM2->CNTRH<<8)+TIM2->CNTRL;//
+				IR.Rcounter=(TIM2->CNTRH)*256;
+				IR.Rcounter+=TIM2->CNTRL;//
+				TIM2->CNTRH=0;
+				TIM2->CNTRL=0;
+				IR.cmd[IR.PulseN]=IR.Rcounter;
+				IR.Learnflag=1;//
+				IR.REVFLAG=0;
+				IR.cmd[0]=IR.PulseN;	//脉冲长度
+			}*/
+		}
+	}
+	if(IR.Learnflag==1) //学习正常完成
+ 	{
+		IR.Learnflag=0;//
+		len=IR.PulseN+1;//包括长度保存至flash
+		disableInterrupts();  //写之前先关中断
+ 		/*for(i=0;i<len;i++)
+ 		{
+			TEMP_cmd[0]=(u08)((IR.cmd[i]>>8)&0x00ff);
+			TEMP_cmd[1]=(u08)(IR.cmd[i]&0x00ff);
+			AT24_Write_page((RF433_PRE_ADDR+OffsetAddr*rfs.number+i*2),TEMP_cmd,2);//RAM有限，2字节存储一次
+			for(int j=0;j<1000;j++) {;}  // 8us延时
+		}*/
+		for(i=0;i<len;i++)
+		{
+			eeprombuf[i*2]=(u08)((IR.cmd[i]>>8)&0x00ff);
+			eeprombuf[i*2+1]=(u08)(IR.cmd[i]&0x00ff);    
+		}
+		if(rfs.type==2)  //433
+		{
+			if(len*2<=128)
+			{
+				AT24_Write_page((RF433_PRE_ADDR+OffsetAddr*rfs.number),eeprombuf,len*2);//RAM有限，2字节存储一次
+			}
+			else if(len*2>128)
+			{
       
-      if(len*2<=256)
-      {
-        AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
-        for(dword i=0;i<1500;i++){}
-        IWDG_ReloadCounter();			// 踢看门狗
-        AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),len*2-128);
-      }
-      else if(len*2>256)
-      {
-        AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
-        for(dword i=0;i<1500;i++){}
-        IWDG_ReloadCounter();			// 踢看门狗
-        AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),128);
-        for(dword i=0;i<1500;i++){}
-        IWDG_ReloadCounter();			// 踢看门狗
-        AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number+256),&(eeprombuf[256]),len*2-256);
-      }
-      for(dword i=0;i<1500;i++){}
-      AT24_Write_page((RF433_PRE_ADDR+OffsetAddr*rfs.number),splflage,2);
-    }
-  }
-  else if(rfs.type==1)  //315
-  {
-    if(len*2<=128)
-    {
-      AT24_Write_page((RF315_PRE_ADDR+OffsetAddr*rfs.number),eeprombuf,len*2);//RAM有限，2字节存储一次
-    }
-    else if(len*2>128)
-    {
+				if(len*2<=256)
+				{
+					AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
+					for(dword i=0;i<1500;i++){}
+					IWDG_ReloadCounter();			// 踢看门狗
+					AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),len*2-128);
+				}
+				else if(len*2>256)
+				{
+					AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
+					for(dword i=0;i<1500;i++){}
+					IWDG_ReloadCounter();			// 踢看门狗
+					AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),128);
+					for(dword i=0;i<1500;i++){}
+					IWDG_ReloadCounter();			// 踢看门狗
+					AT24_Write_page((RF433_PRE_ADDR_SPL+OffsetAddr*rfs.number+256),&(eeprombuf[256]),len*2-256);
+				}
+				for(dword i=0;i<1500;i++){}
+				AT24_Write_page((RF433_PRE_ADDR+OffsetAddr*rfs.number),splflage,2);
+			}
+		}
+		else if(rfs.type==1)  //315
+		{
+			if(len*2<=128)
+			{
+				AT24_Write_page((RF315_PRE_ADDR+OffsetAddr*rfs.number),eeprombuf,len*2);//RAM有限，2字节存储一次
+			}
+			else if(len*2>128)
+			{
       
-      if(len*2<=256)
-      {
-        AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
-        for(dword i=0;i<1500;i++){}
-        IWDG_ReloadCounter();			// 踢看门狗
-        AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),len*2-128);
-      }
-      else if(len*2>256)
-      {
-        AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
-        for(dword i=0;i<1500;i++){}
-        IWDG_ReloadCounter();			// 踢看门狗
-        AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),128);
-        for(dword i=0;i<1500;i++){}
-        IWDG_ReloadCounter();			// 踢看门狗
-        AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number+256),&(eeprombuf[256]),len*2-256);
-      }
-      for(dword i=0;i<1500;i++){}
-      AT24_Write_page((RF315_PRE_ADDR+OffsetAddr*rfs.number),splflage,2);
-    }
-  }
+				if(len*2<=256)
+				{
+					AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
+					for(dword i=0;i<1500;i++){}
+					IWDG_ReloadCounter();			// 踢看门狗
+					AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),len*2-128);
+				}
+				else if(len*2>256)
+				{
+					AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number),eeprombuf,128);
+					for(dword i=0;i<1500;i++){}
+					IWDG_ReloadCounter();			// 踢看门狗
+					AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number+128),&(eeprombuf[128]),128);
+					for(dword i=0;i<1500;i++){}
+					IWDG_ReloadCounter();			// 踢看门狗
+					AT24_Write_page((RF315_PRE_ADDR_SPL+OffsetAddr*rfs.number+256),&(eeprombuf[256]),len*2-256);
+				}
+				for(dword i=0;i<1500;i++){}
+				AT24_Write_page((RF315_PRE_ADDR+OffsetAddr*rfs.number),splflage,2);
+			}
+		}
 
-  enableInterrupts();  //写结束后开中断
-  rfs.type=0;
-  for(i=0;i<10;i++)     //发送学习成功应答
-  {
-     sbuffer[i]=WirelearnAndControl_answer[i];
-  }
-     sbuffer[10] = rfs.number>>8;//keyValH 
-     sbuffer[11] = rfs.number&0xff;//keyValL 
-     sbuffer[12] = 1;
-     strcat(&sbuffer[13],RCR_ETX);
-     // strcat(&sbuffer[16],"\r\n");
-     lenth=16;//strlen(sbuffer);
-     SMSSEND(lenth,sbuffer,2);
-     LED_staflag=1;
-     ledSetParam(1,1);//停止闪烁常亮
- }
- else if(IR.Learnflag==2) //红外学习成功退出
- {
-    IR.Learnflag=0;;//超过10秒为学习成功自动退出
-    ledSetParam(50,100);//指示灯回复正常闪烁
-    rfs.type=0;
-    for(i=0;i<10;i++)     //发送学习失败应答
-    {
-     sbuffer[i]=WirelearnAndControl_answer[i];
-    }
-     sbuffer[10] = rfs.number>>8;//keyValH 
-     sbuffer[11] = rfs.number&0xff;//keyValL 
-     sbuffer[12] = 1;
-     strcat(&sbuffer[13],RCR_ETX);
-     // strcat(&sbuffer[16],"\r\n");
-     lenth=16;//strlen(sbuffer);
-     SMSSEND(lenth,sbuffer,2);
- }
- else if(IR.Learnflag==0xff) //学习异常退出
- {
-    IR.Learnflag=0;;//超过10秒为学习成功自动退出
-    ledSetParam(50,100);//指示灯回复正常闪烁
-    rfs.type=0;
-    for(i=0;i<10;i++)     //发送学习失败应答
-    {
-     sbuffer[i]=WirelearnAndControl_answer[i];
-    }
-     sbuffer[10] = rfs.number>>8;//keyValH 
-     sbuffer[11] = rfs.number&0xff;//keyValL 
-     sbuffer[12] = 0;
-     strcat(&sbuffer[13],RCR_ETX);
-     // strcat(&sbuffer[16],"\r\n");
-     lenth=16;//strlen(sbuffer);
-     SMSSEND(lenth,sbuffer,2);
- }
- else
- {
- }
+		enableInterrupts();  //写结束后开中断
+		rfs.type=0;
+		for(i=0;i<10;i++)     //发送学习成功应答
+		{
+			sbuffer[i]=WirelearnAndControl_answer[i];
+		}
+		sbuffer[10] = rfs.number>>8;//keyValH 
+		sbuffer[11] = rfs.number&0xff;//keyValL 
+		sbuffer[12] = 1;
+		strcat(&sbuffer[13],RCR_ETX);
+		// strcat(&sbuffer[16],"\r\n");
+		lenth=16;//strlen(sbuffer);
+		SMSSEND(lenth,sbuffer,2);
+		LED_staflag=1;
+		ledSetParam(1,1);//停止闪烁常亮
+	}
+	else if(IR.Learnflag==2) //红外学习成功退出
+	{
+		IR.Learnflag=0;;//超过10秒为学习成功自动退出
+		ledSetParam(50,100);//指示灯回复正常闪烁
+		rfs.type=0;
+		for(i=0;i<10;i++)     //发送学习失败应答
+		{
+			sbuffer[i]=WirelearnAndControl_answer[i];
+		}
+		sbuffer[10] = rfs.number>>8;//keyValH 
+		sbuffer[11] = rfs.number&0xff;//keyValL 
+		sbuffer[12] = 1;
+		strcat(&sbuffer[13],RCR_ETX);
+		// strcat(&sbuffer[16],"\r\n");
+		lenth=16;//strlen(sbuffer);
+		SMSSEND(lenth,sbuffer,2);
+	}
+	else if(IR.Learnflag==0xff) //学习异常退出
+	{
+		IR.Learnflag=0;;//超过10秒为学习成功自动退出
+		ledSetParam(50,100);//指示灯回复正常闪烁
+		rfs.type=0;
+		for(i=0;i<10;i++)     //发送学习失败应答
+		{
+			sbuffer[i]=WirelearnAndControl_answer[i];
+		}
+		sbuffer[10] = rfs.number>>8;//keyValH 
+		sbuffer[11] = rfs.number&0xff;//keyValL 
+		sbuffer[12] = 0;
+		strcat(&sbuffer[13],RCR_ETX);
+		// strcat(&sbuffer[16],"\r\n");
+		lenth=16;//strlen(sbuffer);
+		SMSSEND(lenth,sbuffer,2);
+	}
+ 	else
+ 	{
+ 	}
  
 }
 void ResponseToAppCfg();
