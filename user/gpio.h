@@ -49,7 +49,8 @@
 #define  AT24_GET_SDA  GPIO_ReadInputPin(GPIOE, HXD_SDA_PIN)
 
 //RF模块引脚定义
-#define RF_RX_PORT     GPIOD
+#define RF433_RX_PORT     GPIOD
+#define RF315_RX_PORT     GPIOE			//By HeYC 0921
 #define RF315_RX_PIN   GPIO_PIN_0
 #define RF433_RX_PIN   GPIO_PIN_4
 #define RF_TX_PORT     GPIOB
