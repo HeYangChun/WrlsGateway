@@ -461,18 +461,20 @@ TASKCFUNC(wifiMonitor)
           // SMSSEND(lenths,sbuffer,4);//发送给服务器
           }
 		  
-          ledSetParam(50,100);
+          //By HeYC 0923	ledSetParam(50,100);
 	   uartFlushReceiveBuffer(COM_WIFI); //By HeYC
 	   ChangeTask(0); // 
 	   
-          if(hartconnectflag)
+          if(cfgWifiForAppCfg)
           {
            flagConnetedWithSvr=1; //关闭连接云服务器任务   
           }
-          else if(hartconnectflag==0)
+          else if(cfgWifiForAppCfg==0)
           {
+          ledSetParam(50,100);//Toggle led to normal heat beat frequency
             flagConnetedWithSvr=0; //启动连接云服务器任务 
           }
+		  cfgWifiForAppCfg=0;//By HeYC 0923
 	}
    } 
 }
@@ -870,7 +872,7 @@ void GetSWSTATES(void)
           Authenticationflag=0;//关闭心跳
 //By HeYC 0907	          HFlagWhereAuthSetZero=4;
           flagConnetedWithSvr=1;
-          hartconnectflag=1;
+          cfgWifiForAppCfg=1;
           KEYPRESS_DelayFlg=0;
           wifiMDInitflag=1; //初始化模式标志
           strcpy(UDPPort,"40001");

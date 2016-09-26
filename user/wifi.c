@@ -37,7 +37,12 @@
 //0909:	fixed a bug if alarm triggered when secutiry is not set, if security is set, alarm will be triggered.
 //#define VER_INFO				"GW_V22"
 //0912: removed some spaces to make it more readable in IRProcess
-#define VER_INFO				"GW_V23"
+//#define VER_INFO				"GW_V23"
+//0922: rename the ssid of wifi module when configure from crx_hd to HZ-Topan
+//#define VER_INFO				"GW_V24"
+//0923: fixed a bug: led will stop flash during connfigure, should beep flashing during whole period
+#define VER_INFO				"GW_V25"
+
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
 static int _wifiRet = WIFI_NONE;

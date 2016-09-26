@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=1492642643
+Checksum=-1425055435
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -43,8 +43,14 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\user\main.c}.35.2@1" 1 0 0 0 "" 0 ""
-Count=1
+Bp0=_ "STD_CODE" "0x00C796" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.182.19@1" 1 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.1523.4@1" 1 0 0 0 "" 0 ""
+Bp3=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.1527.14@1" 1 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.1655.3@1" 1 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{$PROJ_DIR$\user\initTask.c}.1672.3@1" 1 0 0 0 "" 0 ""
+Bp6=_ "STD_CODE" "{$PROJ_DIR$\user\wifi.c}.274.27@1" 1 0 0 0 "" 0 ""
+Count=7
 [Aliases]
 A0=_ "C:\Users\zzw\Desktop\BOXControler - V1.2.4\FWLib\src\stm8s_exti.c" ""
 A1=_ "D:\hhzn\BOXControler - V1.0\user\main.c" ""

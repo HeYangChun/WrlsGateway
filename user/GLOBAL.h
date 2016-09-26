@@ -414,7 +414,7 @@ extern u08 Authenticationflag;
 extern u08 CNT;
 extern u08 wifiMDInitflag;
 extern u08 ClientCounterA;
-extern u08 hartconnectflag;
+extern u08 cfgWifiForAppCfg;
 //By HeYC 0907	extern byte HFlagWhereAuthSetZero;
 extern volatile byte secModChangedFlag;//By HeYC
 extern int wifiInitMsg;//By HeYC 

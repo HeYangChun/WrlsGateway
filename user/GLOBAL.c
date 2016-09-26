@@ -77,7 +77,7 @@ u08 splflage[2]={0x55,0xaa};
 
 //by heyc 0906	char ssid[20]="andy";//路由器账号He:init it with para
 //by heyc 0906	char ssidPassword[20]="andyandy";//路由器密码 He:init it with para
-char apssid[20]={"CORX_HD"};//模块的账号
+char apssid[20]={"HZ-Topan"};//模块的账号 0922 by heyc from CORX_HD to HZ-Topan
 char apssidPassword[20]={"1234567"};//模块的密码
 //current currents;//取消
 //u08 REALYState;//取消
@@ -91,7 +91,8 @@ u08 wifiATCmdSetStat=0;//WIFI_STATE_PRE
 u08 STAEnable;
 u08 flagConnetedWithSvr=0;//By HeYC from 1 to 0
 u32 timerOfReConnectSvr=0;//
-u08 hartconnectflag=0;
+//By HeYC 0923	u08 hartconnectflag=0;
+u08 cfgWifiForAppCfg=0;//By HeYC 0923
 
 u08 statOfConnectToRmtSvr;
 u08 flagBgnConnectSvr=0;//By HeYC, let it equal 0 at begin;
