@@ -474,7 +474,7 @@ TASKCFUNC(wifiMonitor)
           ledSetParam(50,100);//Toggle led to normal heat beat frequency
             flagConnetedWithSvr=0; //启动连接云服务器任务 
           }
-		  cfgWifiForAppCfg=0;//By HeYC 0923
+		cfgWifiForAppCfg=0;//By HeYC 0923
 	}
    } 
 }
@@ -612,13 +612,23 @@ void GETCONFIG(void)
 	Read_Flash(SW_ID_ADDR,(u08*)&gCfgPara,sizeof(gCfgPara));
 
 	//check valid
-	if(strcmp(gCfgPara.magicStr,"topan")!=0){
+	//if(strcmp(gCfgPara.magicStr,"topan")!=0){
+	if(	gCfgPara.magicStr[0]!='t' ||
+		gCfgPara.magicStr[1]!='o' ||
+		gCfgPara.magicStr[2]!='p' ||
+		gCfgPara.magicStr[3]!='a' ||
+		gCfgPara.magicStr[4]!='n' )
+	{
 		//failed, format flash
 
 		//magic string
-		strcpy(gCfgPara.magicStr,"topan");
+		gCfgPara.magicStr[0]='t';
+		gCfgPara.magicStr[1]='o';
+		gCfgPara.magicStr[2]='p';
+		gCfgPara.magicStr[3]='a';
+		gCfgPara.magicStr[4]='n';
 		//default mac addr
-		strcpy(gCfgPara.macAddr,"1afe34a1584a");
+		strcpy(gCfgPara.macAddr,"201610051643");//
 		//Server address and port
 		strcpy(gCfgPara.serverAddr,"topansh.wicp.net");
 		strcpy(gCfgPara.serverPort,"7269");		

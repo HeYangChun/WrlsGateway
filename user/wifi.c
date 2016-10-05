@@ -41,7 +41,9 @@
 //0922: rename the ssid of wifi module when configure from crx_hd to HZ-Topan
 //#define VER_INFO				"GW_V24"
 //0923: fixed a bug: led will stop flash during connfigure, should beep flashing during whole period
-#define VER_INFO				"GW_V25"
+//#define VER_INFO				"GW_V25"
+//1005: maybe there is a bug of magic str compare when next field is not equal 0;
+#define VER_INFO				"GW_V26"
 
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
@@ -1791,6 +1793,7 @@ int wifiCmdCIPSEND(int len, u08 clientIDS,int repeat)//·¢ËÍÊý¾Ý
        // return 1;
 	return (WifiCommand(buf, WIFI_NONE, 1000, repeat));
 }
+
 
 /*******************************************************************************
 
