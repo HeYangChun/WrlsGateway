@@ -12,25 +12,25 @@
           
           
           
-        <Column0>196</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>179</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       <PreferedWindows><Position>1</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows></Workspace>
     <Build><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Find-in-Files</Factory></Window><Window><Factory>Breakpoints</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>715</ColumnWidth1><ColumnWidth2>477</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build><SourceBrowser><PreferedWindows><Position>1</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Workspace</Factory></Window></Windows></PreferedWindows></SourceBrowser><TerminalIO/><Debug-Log><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Find-in-Files</Factory></Window><Window><Factory>Breakpoints</Factory></Window></Windows></PreferedWindows><ColumnWidth0>23</ColumnWidth0><ColumnWidth1>1218</ColumnWidth1></Debug-Log><Disassembly><MixedMode>1</MixedMode><CodeCovShow>0</CodeCovShow><InstrProfShow>0</InstrProfShow></Disassembly><Find-in-Files><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Breakpoints</Factory></Window></Windows></PreferedWindows><ColumnWidth0>440</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files></Static>
     <Windows>
       
-    <Wnd2><Tabs><Tab><Identity>TabID-18485-10685</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab><Tab><Identity>TabID-14031-12405</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab></Tabs><SelectedTab>1</SelectedTab></Wnd2><Wnd3><Tabs><Tab><Identity>TabID-25458-7066</Identity><TabName>Workspace</TabName><Factory>Workspace</Factory><Session><NodeDict><ExpandedNode>BoxControler</ExpandedNode></NodeDict></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
+    <Wnd1><Tabs><Tab><Identity>TabID-18485-10685</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab><Tab><Identity>TabID-14031-12405</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-3239-9513</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>1</SelectedTab></Wnd1><Wnd3><Tabs><Tab><Identity>TabID-25458-7066</Identity><TabName>Workspace</TabName><Factory>Workspace</Factory><Session><NodeDict><ExpandedNode>BoxControler</ExpandedNode><ExpandedNode>BoxControler/user</ExpandedNode></NodeDict></Session></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd3></Windows>
     <Editor>
       
       
       
       
-    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\user\wifi.c</Filename><XPos>0</XPos><YPos>545</YPos><SelStart>23327</SelStart><SelEnd>23327</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\user\main.c</Filename><XPos>0</XPos><YPos>20</YPos><SelStart>1301</SelStart><SelEnd>1301</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\user\task.c</Filename><XPos>0</XPos><YPos>58</YPos><SelStart>1800</SelStart><SelEnd>1800</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\user\stm8s_it.c</Filename><XPos>0</XPos><YPos>601</YPos><SelStart>20406</SelStart><SelEnd>20406</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\user\initTask.c</Filename><XPos>0</XPos><YPos>618</YPos><SelStart>18440</SelStart><SelEnd>18440</SelEnd></Tab><ActiveTab>4</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-0129dc68><key>iaridepm.enu1</key></Toolbar-0129dc68></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>319</Bottom><Right>270</Right><x>-2</x><y>-2</y><xscreen>171</xscreen><yscreen>165</yscreen><sizeHorzCX>125183</sizeHorzCX><sizeHorzCY>240525</sizeHorzCY><sizeVertCX>199122</sizeVertCX><sizeVertCY>467930</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>322</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>324</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>472303</sizeHorzCY><sizeVertCX>98097</sizeVertCX><sizeVertCY>160350</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-005cdc68><key>iaridepm.enu1</key></Toolbar-005cdc68></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>450</Bottom><Right>270</Right><x>-2</x><y>-2</y><xscreen>171</xscreen><yscreen>165</yscreen><sizeHorzCX>125183</sizeHorzCX><sizeHorzCY>240525</sizeHorzCY><sizeVertCX>199122</sizeVertCX><sizeVertCY>658892</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>191</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>193</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>281341</sizeHorzCY><sizeVertCX>98097</sizeVertCX><sizeVertCY>160350</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

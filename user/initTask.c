@@ -253,24 +253,26 @@ TASK IdelTask(void)
           					almBrdcstFlag--;
         				}
         
-        				if(secModChangedFlag==3)//安防状态改变上报服务器
+        				if(secModChangedFlag==3 )//安防状态改变上报服务器
         				{
-        					//HeYC: send stat to server
-          					for(i=0;i<10;i++)
-          					{
-             						sbuffer[i]=GetCurSetOrUnSet_answer[i];
-          					}
-          					for(i=10;i<16;i++)
-          					{
-            						sbuffer[i]=macidHEX[i-10];
-          					}
-          					//strcat(&sbuffer[10],macidHEX);
-          					sbuffer[16] = curSecuModeShadow;//By HeYC: from SetOrUnsetState[0] to curSecuModeShadow
-          					strcat(&sbuffer[17],RCR_ETX);
-          					// strcat(&sbuffer[20],"\r\n");
-          					lenth=20;//strlen(sbuffer);
-          					SMSSEND(lenth,sbuffer,4);  //发送给服务器
-						//By HeYC          SetOrUnsetflag=2;
+        					if( Authenticationflag!=0){
+	        					//HeYC: send stat to server
+	          					for(i=0;i<10;i++)
+	          					{
+	             						sbuffer[i]=GetCurSetOrUnSet_answer[i];
+	          					}
+	          					for(i=10;i<16;i++)
+	          					{
+	            						sbuffer[i]=macidHEX[i-10];
+	          					}
+	          					//strcat(&sbuffer[10],macidHEX);
+	          					sbuffer[16] = curSecuModeShadow;//By HeYC: from SetOrUnsetState[0] to curSecuModeShadow
+	          					strcat(&sbuffer[17],RCR_ETX);
+	          					// strcat(&sbuffer[20],"\r\n");
+	          					lenth=20;//strlen(sbuffer);
+	          					SMSSEND(lenth,sbuffer,4);  //发送给服务器
+							//By HeYC          SetOrUnsetflag=2;
+        					}
 						secModChangedFlag--;//By HeYC
 
 						//ByHeYC 0822		if(SetOrUnsetState[0]!=curSecuModeShadow){
@@ -628,7 +630,7 @@ void GETCONFIG(void)
 		gCfgPara.magicStr[3]='a';
 		gCfgPara.magicStr[4]='n';
 		//default mac addr
-		strcpy(gCfgPara.macAddr,"201610051643");//
+		strcpy(gCfgPara.macAddr,"1afe34f3afd4");//
 		//Server address and port
 		strcpy(gCfgPara.serverAddr,"topansh.wicp.net");
 		strcpy(gCfgPara.serverPort,"7269");		
@@ -1967,20 +1969,22 @@ void  alarmRFTask(void)//100ms任务
 		      		//By HeYC 0908		alarm.sending=1;
 		      		//By HeYC 0908		alarm.timeCounter=0;
 		      			//报警信号发送，通过发送函数发送探头编号
-		      			for(i=0;i<10;i++)     
-		      			{
-		        			sbuffer[i]=ProbeAlarm[i];
-		      			}
-		      			for(i=10;i<16;i++)
-		      			{
-		        			sbuffer[i]=macidHEX[i-10];
-		      			}
+		      			if(Authenticationflag!=0){//By HeYC 1010
+			      			for(i=0;i<10;i++)     
+			      			{
+			        			sbuffer[i]=ProbeAlarm[i];
+			      			}
+			      			for(i=10;i<16;i++)
+			      			{
+			        			sbuffer[i]=macidHEX[i-10];
+			      			}
 
-		      			sbuffer[16] = alarm.NO>>8;	//keyValH 
-		      			sbuffer[17] = alarm.NO&0xff;	//keyValL 
-		      			strcat(&sbuffer[18],RCR_ETX);
-		      			lenth=21;
-		      			SMSSEND(lenth,sbuffer,4);    //向服务器发送报警信息
+			      			sbuffer[16] = alarm.NO>>8;	//keyValH 
+			      			sbuffer[17] = alarm.NO&0xff;	//keyValL 
+			      			strcat(&sbuffer[18],RCR_ETX);
+			      			lenth=21;
+			      			SMSSEND(lenth,sbuffer,4);    //向服务器发送报警信息
+		      			}//By HeYC 1010
 
 			  		//He:this flag will be detected in initTask loops and will be used to send a broadcast in local network
 		      			almBrdcstFlag=2;		//broadcast 2 times

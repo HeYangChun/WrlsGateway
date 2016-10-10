@@ -108,7 +108,7 @@ void IWDG_Configuration(void)
   IWDG_Enable();	//启动开门狗
   IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);  //启动寄存器读写
   IWDG_SetPrescaler(IWDG_Prescaler_256);	   //128K时钟256分频
-  IWDG_SetReload(0xFF);//计数器数值
+  IWDG_SetReload(0xFA);//计数器数值HeYC from FF to FA 1008
   IWDG_ReloadCounter();	
   
 }

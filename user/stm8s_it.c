@@ -1273,7 +1273,7 @@ __interrupt void TIM2_UPD_OVF_BRK_IRQHandler(void)
 	      			TIME2_set(60000);//恢复60ms
           			readbuf[0]=0;
           			readbuf[1]=0;
-          			if(send_flag==1)
+          			if(send_flag==1 && Authenticationflag!=0)
           			{
             				for(int i=0;i<10;i++)     //服务器控制成功应答
             				{
@@ -1364,7 +1364,7 @@ __interrupt void TIM2_UPD_OVF_BRK_IRQHandler(void)
           			rfs.type=0;
           			RF433_TX_LO;
 	      			TIME2_set(60000);//恢复60ms
-          			if(send_flag==1)
+          			if(send_flag==1 && Authenticationflag!=0)
           			{
             				for(int i=0;i<10;i++)   //服务器控制成功应答
             				{

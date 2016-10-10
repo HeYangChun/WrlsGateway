@@ -17,6 +17,7 @@
 #include "stm8s_lib.h"
 #include "init.h"
 #include "task.h"
+#include "gpio.h"
 
 /*******************************************************************************
 * Function Name  : main
@@ -30,10 +31,35 @@ int main(void)
 #ifdef DEBUG
     debug();
 #endif
+    unsigned int iTmp=0,iTmp2=0;//By HeYC 1008
     
 	/* just refer to cpu,target board,memory,extern device ect initialization */
 	sysInit();
-	
+
+	/*Bgn:Test watch dog
+	while(1){
+		nop();
+	}
+	//End:Test watch dog*/
+	//Bgn:By HeYC 1008, to see if the cpu had been reset.
+       RUN_ON();
+	for(iTmp2=0;iTmp2<200;iTmp2++){
+	       for(iTmp=0;iTmp<5000;iTmp++){
+		  	nop();	
+	                nop();
+	                nop();
+	                nop();	
+	                nop();
+	                nop();
+	                nop();	
+	                nop();
+	                nop();
+		  	if(iTmp%1000==0){
+				IWDG_ReloadCounter();
+		  	}
+	        }
+	}
+	//End:By HeYC 1008
 	/* complete user task initialization   */
 	/* start the first task */
 	sch_scheduler_init();

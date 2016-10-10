@@ -43,7 +43,9 @@
 //0923: fixed a bug: led will stop flash during connfigure, should beep flashing during whole period
 //#define VER_INFO				"GW_V25"
 //1005: maybe there is a bug of magic str compare when next field is not equal 0;
-#define VER_INFO				"GW_V26"
+//#define VER_INFO				"GW_V26"
+//1008:	light on the led at the begin of reset
+#define VER_INFO				"GW_V27"
 
 char _cmdIsSend = 0;
 static int _cmdRepeat = 0;
@@ -121,6 +123,12 @@ void UpdateMacIDHex();
 //Bgn:By HeYC 0906
 void InitCfgParaBeforeUpdate(){
 
+	gCfgPara.magicStr[0]='t';
+	gCfgPara.magicStr[1]='o';
+	gCfgPara.magicStr[2]='p';
+	gCfgPara.magicStr[3]='a';
+	gCfgPara.magicStr[4]='n';
+	
 	memset(&gCfgPara.SSIDToJoin[0],0,20);
 
 	memset(&gCfgPara.SSIDPwd[0],0,20);
